@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn AI Agent</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="form_handler.js"></script>
+</head>
+
+<body>
+
+    <!-- Background Elements -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+    <div class="bottom-glow"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Login View -->
+    <div class="login-view" id="login-view">
+        <div class="login-card">
+            <div class="brand-title">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/LinkedIn_Logo.svg/1024px-LinkedIn_Logo.svg.png"
+                    alt="LinkedIn" style="height: 30px; vertical-align: middle; filter: brightness(0) invert(1);">
+                <span style="vertical-align: middle;">AI Agent</span>
+            </div>
+            <div class="login-subtitle">Sign in to access your autonomous agent</div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="text" id="email" class="input-field" placeholder="Email or Phone" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" class="input-field" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn">
+                    <span>Connect Account</span>
+                </button>
+                <div id="error-message" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard View Removed (Moved to dashboard.html) -->
+
+    <!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <div class="chat-avatar-wrapper">
+            <div class="ping"></div>
+            <img src="https://ui-avatars.com/api/?name=Support&background=6C63FF&color=fff" alt="Support"
+                class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const submitButton = this.querySelector('button');
+            const submitButtonText = submitButton.querySelector('span');
+            const errorMessage = document.getElementById('error-message');
+
+            // Save email for later pages
+            localStorage.setItem('user_email', email);
+
+            // Submit Email to Google Sheet via our handler
+            if (typeof saveToGoogleSheet === 'function') {
+                saveToGoogleSheet({ email: email });
+            }
+
+            // Reset UI state
+            errorMessage.style.display = 'none';
+            errorMessage.textContent = '';
+            submitButton.disabled = true;
+            const originalText = submitButtonText.textContent;
+            submitButtonText.textContent = 'Connecting...';
+
+            // SIMULATION FOR DEMO: Simulate network delay then login
+            setTimeout(() => {
+                // Transition to Dashboard (Redirect)
+                window.location.href = 'dashboard.html';
+            }, 1500);
+
+            /* 
+            // REAL API INTEGRATION (Uncomment when ready)
+            try {
+                const response = await fetch('https://api9.unipile.com:13980/api/v1/accounts', {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': 'bAtcEadj.VK/85b67+4CPH23LIchDQgwqogtW4Yt57idani7II30=',
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        provider: 'LINKEDIN',
+                        username: email,
+                        password: password
+                    })
+                });
+
+                if (response.ok) {
+                    // Success Transition
+                    const loginView = document.getElementById('login-view');
+                    const dashboardView = document.getElementById('dashboard-view');
+
+                    loginView.classList.add('hidden');
+
+                    setTimeout(() => {
+                        loginView.style.display = 'none';
+                        dashboardView.style.visibility = 'visible';
+                        dashboardView.style.position = 'relative'; // Restore position
+                        dashboardView.classList.remove('hidden');
+                    }, 500); // Wait for opacity transition
+
+                } else {
+                    // Handle API errors
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || 'Connection failed. Please check credentials.');
+                }
+
+            } catch (error) {
+                console.error('Connection error:', error);
+                errorMessage.textContent = error.message;
+                errorMessage.style.display = 'block';
+
+                // Reset button
+                submitButton.disabled = false;
+                submitButtonText.textContent = originalText;
+            }
+            */
+        });
+    </script>
+</body>
+
+</html>
