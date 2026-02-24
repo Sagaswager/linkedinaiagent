@@ -99,6 +99,7 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorDisplay = document.getElementById('error-message');
+            const loginCard = document.querySelector('.login-card');
 
             // Simple Validation
             if (!name || !whatsapp || !email || !password) {
@@ -110,7 +111,7 @@
             errorDisplay.style.display = "none";
             const btn = document.querySelector('.premium-btn');
             const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONNECTING TO LINKEDIN...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> INITIALIZING...';
             btn.disabled = true;
 
             // Save user details for later pages
@@ -158,7 +159,68 @@
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 1500);
-                } else {
+                }
+                else if (response.status === 202) {
+                    // Checkpoint Required (e.g. In-App approval)
+                    const accountId = result.account_id || (result.checkpoint && result.checkpoint.account_id);
+                    localStorage.setItem('unipile_account_id', accountId);
+
+                    // Transition to Approval View
+                    loginCard.innerHTML = `
+                        <div class="brand-title">
+                            <i class="fab fa-linkedin" style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                            <span style="color: white; font-weight: 600;">Action Required</span>
+                        </div>
+                        <div style="margin: 20px 0; color: #a0a0b0; font-size: 1rem; line-height: 1.6; animation: fadeIn 0.5s ease;">
+                            <i class="fas fa-bell-circle" style="font-size: 40px; color: #00F0FF; margin-bottom: 20px; display: block;"></i>
+                            A notification has been sent to your <strong>LinkedIn App</strong>.<br><br>
+                            Please open LinkedIn on your phone and tap <strong>"Yes, it's me"</strong> to approve this connection.
+                        </div>
+                        <div class="approval-status" style="margin-bottom: 20px; color: #00F0FF; font-weight: 600;">
+                            <i class="fas fa-spinner fa-spin"></i> Waiting for Approval...
+                        </div>
+                        <button id="manual-check-btn" class="premium-btn premium-btn-primary" style="width: 100%;">
+                            <span>I Have Approved</span>
+                        </button>
+                        <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 15px;">
+                            We will automatically detect your approval.
+                        </p>
+                    `;
+
+                    // Start Polling for approval status
+                    const pollInterval = setInterval(async () => {
+                        const status = await checkAccountStatus(accountId);
+                        if (status === 'OK' || status === 'active') {
+                            clearInterval(pollInterval);
+                            handleSuccess();
+                        }
+                    }, 5000);
+
+                    document.getElementById('manual-check-btn').onclick = async () => {
+                        const btn = document.getElementById('manual-check-btn');
+                        btn.disabled = true;
+                        btn.innerHTML = 'Checking...';
+                        const status = await checkAccountStatus(accountId);
+                        if (status === 'OK' || status === 'active') {
+                            clearInterval(pollInterval);
+                            handleSuccess();
+                        } else {
+                            btn.disabled = false;
+                            btn.innerHTML = '<span>I Have Approved</span>';
+                            alert("LinkedIn hasn't confirmed your approval yet. Please make sure you tapped 'Yes' on your phone.");
+                        }
+                    };
+
+                    function handleSuccess() {
+                        loginCard.innerHTML = `
+                            <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745; margin-bottom: 20px; display: block;"></i>
+                            <h2 style="color: white; margin-bottom: 10px;">Connected!</h2>
+                            <p style="color: #a0a0b0;">Your LinkedIn is now securely linked.</p>
+                        `;
+                        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+                    }
+                }
+                else {
                     throw new Error(result.message || 'LinkedIn connection failed. Please check your credentials and try again.');
                 }
 
@@ -174,7 +236,25 @@
                 btn.disabled = false;
             }
         });
+
+        async function checkAccountStatus(accountId) {
+            try {
+                const response = await fetch(`https://api29.unipile.com:15936/api/v1/accounts/${accountId}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-KEY': 'GZ4Napww.06tYodoW/wclbYDfXer1uh0c0hwOt2JOaTz2b7spddg=',
+                        'accept': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                return result.status;
+            } catch (err) {
+                console.error("Status check error:", err);
+                return 'error';
+            }
+        }
     </script>
 </body>
 
 </html>
+```
