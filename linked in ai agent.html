@@ -98,18 +98,19 @@
             const whatsapp = document.getElementById('whatsapp-number').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
+            const errorDisplay = document.getElementById('error-message');
 
             // Simple Validation
             if (!name || !whatsapp || !email || !password) {
-                const err = document.getElementById('error-message');
-                err.innerText = "Please fill all fields.";
-                err.style.display = "block";
+                errorDisplay.innerText = "Please fill all fields.";
+                errorDisplay.style.display = "block";
                 return;
             }
 
+            errorDisplay.style.display = "none";
             const btn = document.querySelector('.premium-btn');
             const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONNECTING...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONNECTING TO LINKEDIN...';
             btn.disabled = true;
 
             // Save user details for later pages
@@ -117,32 +118,23 @@
             localStorage.setItem('user_name', name);
             localStorage.setItem('user_whatsapp', whatsapp);
 
-            // Submit Data to Google Sheet via our handler
-            if (typeof saveToGoogleSheet === 'function') {
-                try {
-                    await saveToGoogleSheet({
+            try {
+                // 1. Submit Data to Google Sheet (Optional but kept for tracking)
+                if (typeof saveToGoogleSheet === 'function') {
+                    saveToGoogleSheet({
                         email: email,
                         name: name,
-                        whatsapp: whatsapp
-                    });
-                } catch (err) {
-                    console.error("Save failed specifically:", err);
+                        whatsapp: whatsapp,
+                        source: 'LinkedIn Connect'
+                    }).catch(err => console.error("Sheet save error:", err));
                 }
-            }
 
-            // Redirect to Dashboard
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-
-            /* 
-            // REAL API INTEGRATION (Uncomment when ready)
-            try {
+                // 2. Connect via Unipile API
                 const response = await fetch('https://api29.unipile.com:15936/api/v1/accounts', {
                     method: 'POST',
                     headers: {
                         'X-API-KEY': 'GZ4Napww.06tYodoW/wclbYDfXer1uh0c0hwOt2JOaTz2b7spddg=',
-                        'Accept': 'application/json',
+                        'accept': 'application/json',
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -151,37 +143,36 @@
                         password: password
                     })
                 });
- 
+
+                const result = await response.json();
+
                 if (response.ok) {
-                    // Success Transition
-                    const loginView = document.getElementById('login-view');
-                    const dashboardView = document.getElementById('dashboard-view');
- 
-                    loginView.classList.add('hidden');
- 
+                    btn.innerHTML = '<i class="fas fa-check"></i> SUCCESS!';
+                    btn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+
+                    // Store the Unipile account ID or token if needed
+                    if (result.account_id) {
+                        localStorage.setItem('unipile_account_id', result.account_id);
+                    }
+
                     setTimeout(() => {
-                        loginView.style.display = 'none';
-                        dashboardView.style.visibility = 'visible';
-                        dashboardView.style.position = 'relative'; // Restore position
-                        dashboardView.classList.remove('hidden');
-                    }, 500); // Wait for opacity transition
- 
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
                 } else {
-                    // Handle API errors
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || 'Connection failed. Please check credentials.');
+                    throw new Error(result.message || 'LinkedIn connection failed. Please check your credentials and try again.');
                 }
- 
+
             } catch (error) {
                 console.error('Connection error:', error);
-                errorMessage.textContent = error.message;
-                errorMessage.style.display = 'block';
- 
+                errorDisplay.innerText = error.message.includes('Failed to fetch')
+                    ? "Connection error. Please check your internet or try again later."
+                    : error.message;
+                errorDisplay.style.display = 'block';
+
                 // Reset button
-                submitButton.disabled = false;
-                submitButtonText.textContent = originalText;
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
             }
-            */
         });
     </script>
 </body>
