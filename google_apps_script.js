@@ -32,7 +32,7 @@ function doPost(e) {
             return ContentService.createTextOutput(JSON.stringify({ "result": "error", "message": "No email provided" })).setMimeType(ContentService.MimeType.JSON);
         }
 
-        const getVal = (headerText) => {
+        const getValForHeader = (headerText) => {
             const h = headerText.toString().toLowerCase().trim();
 
             if (h.includes("timestamp")) return new Date();
@@ -54,6 +54,12 @@ function doPost(e) {
             if (h.includes("hiring") && h.includes("comment")) return data.comment_hiring;
             if (h.includes("new connection") && h.includes("comment")) return data.comment_new_connections;
             if (h.includes("connections posts") && h.includes("comment")) return data.comment_connections_posts;
+
+            // Follow Up Messages
+            if (h.includes("message 1") || h.includes("msg 1")) return data.message_1;
+            if (h.includes("message 2") || h.includes("msg 2")) return data.message_2;
+            if (h.includes("message 3") || h.includes("msg 3")) return data.message_3;
+            if (h.includes("message 4") || h.includes("msg 4")) return data.message_4;
 
             return null;
         };
