@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn AI Agent - Connect Setup</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="form_handler.js"></script>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+
+    <!-- Back to Dashboard -->
+    <a href="dashboard.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="connect-container">
+
+        <h1 class="page-title"><i class="fab fa-linkedin" style="color: #0A66C2; margin-right: 12px;"></i>Connect</h1>
+        <p class="page-subtitle">Select your criteria to find the perfect connections</p>
+
+        <div class="search-buttons-row">
+
+            <!-- Person Filter -->
+            <div class="search-group" id="person-group">
+                <div class="select-btn" onclick="toggleDropdown('person')">
+                    <div class="orb">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="feature-label">Person</div>
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+
+                <!-- Person Dropdown -->
+                <div class="dropdown-menu" id="person-dropdown">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="dropdown-search" placeholder="Write (ex. Investor) + Enter..."
+                            onkeyup="filterOptions('person', event)">
+                    </div>
+                    <ul class="options-list" id="person-options">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+
+                <!-- Selected Tags Area -->
+                <div class="selected-tags" id="person-tags"></div>
+            </div>
+
+            <!-- Location Filter -->
+            <div class="search-group" id="location-group">
+                <div class="select-btn" onclick="toggleDropdown('location')">
+                    <div class="orb">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div class="feature-label">Location</div>
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+
+                <div class="dropdown-menu" id="location-dropdown">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="dropdown-search"
+                            placeholder="Write City, Country, or Region + Enter..."
+                            onkeyup="filterOptions('location', event)">
+                    </div>
+                    <ul class="options-list" id="location-options">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                <div class="selected-tags" id="location-tags"></div>
+            </div>
+
+            <!-- Industry Filter -->
+            <div class="search-group" id="industry-group">
+                <div class="select-btn" onclick="toggleDropdown('industry')">
+                    <div class="orb">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <div class="feature-label">Industry</div>
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </div>
+
+                <div class="dropdown-menu" id="industry-dropdown">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="dropdown-search" placeholder="Write keyword & Enter..."
+                            onkeyup="filterOptions('industry', event)">
+                    </div>
+                    <ul class="options-list" id="industry-options">
+                        <!-- Populated by JS -->
+                    </ul>
+                </div>
+                <div class="selected-tags" id="industry-tags"></div>
+            </div>
+
+        </div>
+
+        <div class="start-btn-container">
+            <div class="btn-group">
+                <button class="premium-btn premium-btn-glass" id="save-btn" onclick="saveConnectSettings(true)">
+                    <i class="fas fa-save"></i> Save Settings
+                </button>
+                <button class="premium-btn premium-btn-primary" id="start-btn" onclick="startCampaign()">
+                    <i class="fas fa-play"></i> Start Campaign
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <div class="chat-avatar-wrapper"
+            onclick="alert('WhatsApp: +91-9873641909'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+            <div class="ping"></div>
+            <img src="./Support%20Avatar.jpeg"
+                alt="Support" class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+        <div class="chat-name">Sagar</div>
+    </div>
+
+    <!-- Data & Logic -->
+    <script>
+        // Mock Data
+        const rolesData = [
+            "Software Engineer", "Product Manager", "UX Designer", "Data Scientist",
+            "Marketing Manager", "Sales Representative", "HR Specialist", "CEO",
+            "CTO", "Founder", "Consultant", "Project Manager", "DevOps Engineer",
+            "Account Executive", "Business Analyst", "Recruiter", "Full Stack Developer"
+        ];
+
+        const locationData = [
+            "New York, USA", "London, UK", "San Francisco, USA", "Berlin, Germany",
+            "Toronto, Canada", "Sydney, Australia", "Singapore", "Remote",
+            "Los Angeles, USA", "Paris, France", "Mumbai, India", "Dubai, UAE",
+            "Austin, USA", "Amsterdam, Netherlands", "Tokyo, Japan"
+        ];
+
+        const industryData = [
+            "Technology", "Finance", "Healthcare", "Education", "Real Estate",
+            "Marketing & Advertising", "Retail", "Manufacturing", "Media",
+            "Consulting", "Non-profit", "Government", "Transportation", "Energy",
+            "Entertainment", "Construction", "Hospitality"
+        ];
+
+        // State
+        const selections = {
+            person: [],
+            location: [],
+            industry: []
+        };
+
+        // Configuration
+        const MAX_PERSON_TAGS = 6;
+
+        // Initialize Options
+        window.addEventListener('load', () => {
+            populateOptions('person', rolesData);
+            populateOptions('location', locationData);
+            populateOptions('industry', industryData);
+
+            // Load Saved Data
+            loadConnectSettings();
+
+            // Global click to close dropdowns
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.search-group')) {
+                    closeAllDropdowns();
+                }
+            });
+        });
+
+        function loadConnectSettings() {
+            const saved = localStorage.getItem('connect_selections');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    Object.keys(parsed).forEach(type => {
+                        selections[type] = parsed[type] || [];
+                        updateUI(type);
+                    });
+                    checkStartButton();
+                } catch (e) { console.error(e); }
+            }
+        }
+
+        function saveConnectSettings(isManual = false) {
+            localStorage.setItem('connect_selections', JSON.stringify(selections));
+            if (isManual) {
+                const saveBtn = document.getElementById('save-btn');
+                const orig = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+                setTimeout(() => saveBtn.innerHTML = orig, 2000);
+            }
+        }
+
+        function populateOptions(type, data) {
+            const list = document.getElementById(`${type}-options`);
+            list.innerHTML = '';
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'option-item';
+                li.innerText = item;
+                if (selections[type].includes(item)) {
+                    li.classList.add('selected');
+                }
+                li.onclick = (e) => toggleSelection(type, item, e);
+                list.appendChild(li);
+            });
+        }
+
+        function toggleDropdown(type) {
+            const dropdown = document.getElementById(`${type}-dropdown`);
+            const btn = dropdown.parentElement.querySelector('.select-btn');
+            const isOpen = dropdown.classList.contains('show');
+            closeAllDropdowns();
+            if (!isOpen) {
+                dropdown.classList.add('show');
+                btn.classList.add('active');
+            }
+        }
+
+        function closeAllDropdowns() {
+            document.querySelectorAll('.dropdown-menu').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.select-btn').forEach(el => el.classList.remove('active'));
+        }
+
+        function filterOptions(type, event) {
+            const input = document.querySelector(`#${type}-dropdown .dropdown-search`);
+            const filter = input.value.trim();
+            const filterLower = filter.toLowerCase();
+            const list = document.getElementById(`${type}-options`);
+            const items = list.getElementsByTagName('li');
+
+            for (let i = 0; i < items.length; i++) {
+                const txt = items[i].innerText;
+                if (txt.toLowerCase().indexOf(filterLower) > -1) {
+                    items[i].style.display = "flex";
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+
+            if (event && event.key === 'Enter' && filter.length > 0) {
+                if (!selections[type].includes(filter)) {
+                    toggleSelection(type, filter, null);
+                    input.value = '';
+                    for (let i = 0; i < items.length; i++) items[i].style.display = "flex";
+                }
+            }
+        }
+
+        function toggleSelection(type, value, event) {
+            if (event) event.stopPropagation();
+            const index = selections[type].indexOf(value);
+            if (index > -1) {
+                selections[type].splice(index, 1);
+            } else {
+                if (type === 'person' && selections[type].length >= MAX_PERSON_TAGS) return;
+                selections[type].push(value);
+            }
+            saveConnectSettings(false);
+            updateUI(type);
+            checkStartButton();
+        }
+
+        function updateUI(type) {
+            const list = document.getElementById(`${type}-options`);
+            const items = list.getElementsByTagName('li');
+            for (let item of items) {
+                if (selections[type].includes(item.innerText)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            }
+            const tagContainer = document.getElementById(`${type}-tags`);
+            tagContainer.innerHTML = '';
+            selections[type].forEach(val => {
+                const pill = document.createElement('div');
+                pill.className = 'tag-pill';
+                pill.innerHTML = `${val} <i class="fas fa-times" onclick="removeTag('${type}', '${val}')"></i>`;
+                tagContainer.appendChild(pill);
+            });
+        }
+
+        function removeTag(type, value) {
+            const index = selections[type].indexOf(value);
+            if (index > -1) {
+                selections[type].splice(index, 1);
+                saveConnectSettings(false);
+                updateUI(type);
+                checkStartButton();
+            }
+        }
+        window.removeTag = removeTag;
+
+        function checkStartButton() {
+            const startBtn = document.getElementById('start-btn');
+            const hasData = selections.person.length > 0 || selections.location.length > 0 || selections.industry.length > 0;
+            if (hasData) startBtn.classList.add('visible');
+            else startBtn.classList.remove('visible');
+        }
+
+        async function startCampaign() {
+            saveConnectSettings(false);
+            const btn = document.getElementById('start-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> STARTING...';
+            btn.disabled = true;
+
+            if (typeof saveToGoogleSheet === 'function') {
+                await saveToGoogleSheet({
+                    location: selections.location,
+                    person: selections.person,
+                    industry: selections.industry
+                });
+            }
+
+            setTimeout(() => {
+                localStorage.setItem('btn-1_status', 'ON');
+                localStorage.setItem('btn-2_status', 'ON');
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>

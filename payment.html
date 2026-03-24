@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment for a Month - LinkedIn AI Agent</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #000000 !important;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Changed from center to flex-start to allow scrolling without clipping top */
+            padding-top: 80px;
+            /* Space for back button */
+            padding-bottom: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .payment-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .plan-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 1.5rem 0;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .plan-period {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+            padding: 0 1rem;
+        }
+
+        .features-list li {
+            color: white;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+        }
+
+        .features-list li i {
+            color: #00ff88;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
+            margin-top: 1rem;
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(108, 99, 255, 0.6);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .payment-container {
+                padding: 1rem;
+                margin-top: 2rem;
+            }
+
+            .payment-card {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .plan-title {
+                font-size: 1.8rem;
+            }
+
+            .plan-price {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-card {
+                padding: 2rem 1rem;
+            }
+
+            .plan-price {
+                font-size: 2.2rem;
+            }
+
+            .features-list {
+                padding: 1rem;
+            }
+
+            .features-list li {
+                font-size: 0.95rem;
+            }
+
+            .qr-section img {
+                width: 200px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+    <div class="bg-glow bg-glow-1" style="top: -10%; left: -10%;"></div>
+    <div class="bg-glow bg-glow-2" style="bottom: -10%; right: -10%;"></div>
+
+    <!-- Back Button -->
+    <a href="dashboard.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="payment-container">
+        <div class="payment-card">
+            <h1 class="page-title" style="margin-bottom: 0.5rem; font-size: 2.2rem;">
+                <i class="fab fa-linkedin" style="color: #0A66C2; margin-right: 12px;"></i>Subscribe Now
+            </h1>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 0.5px;">Unlock
+                the full power of AI Automation</p>
+
+            <div style="margin-bottom: -0.5rem;">
+                <span
+                    style="text-decoration: line-through; color: rgba(255,255,255,0.4); font-size: 1.1rem; font-weight: 400;">₹
+                    7000/-</span>
+            </div>
+            <div class="plan-price" style="margin: 0.5rem 0;">₹ 3000/-<span class="plan-period">/Month</span></div>
+
+            <ul class="features-list"
+                style="background: rgba(255,255,255,0.02); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem;">
+                <li><i class="fas fa-rocket"></i> AI connections & messaging</li>
+                <li><i class="fas fa-bolt"></i> Smart Lead Generation</li>
+                <li><i class="fas fa-robot"></i> Automated Post Reactions</li>
+                <li><i class="fas fa-clock"></i> 24/7 Background Operation</li>
+                <li style="color: #25D366;">
+                    <i class="fab fa-whatsapp"></i> Priority Support 24/7
+                </li>
+            </ul>
+
+            <!-- UPI QR Code Section -->
+            <div class="qr-section" style="margin-bottom: 2.5rem;">
+                <div style="position: relative; display: inline-block;">
+                    <div
+                        style="position: absolute; inset: -4px; background: linear-gradient(135deg, var(--primary), var(--accent)); border-radius: 20px; z-index: -1; filter: blur(5px);">
+                    </div>
+                    <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block;">
+                        <img src="./payment-qr.jpg.jpeg"
+                            alt="Scan to Pay" style="width: 240px; height: auto; display: block; border-radius: 8px;">
+                    </div>
+                </div>
+                <div style="margin-top: 15px; color: var(--text-muted); font-size: 0.95rem; font-weight: 500;">
+                    <i class="fas fa-qrcode" style="margin-right: 8px;"></i>Scan to Pay via UPI
+                </div>
+            </div>
+
+            <button class="premium-btn whatsapp-green-btn" style="width: 100%;"
+                onclick="alert('Please send a screenshot of your payment to WhatsApp: +91-9873641909\n\nClick OK to open WhatsApp.'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+                <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> Confirm with Team
+            </button>
+            <br>
+            <a href="dashboard.html" class="back-link"
+                style="text-transform: uppercase; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; color: rgba(255,255,255,0.3);">
+                Cancel & Return
+            </a>
+        </div>
+    </div>
+
+    <!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <div class="chat-avatar-wrapper"
+            onclick="alert('Support: +91-9873641909'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+            <div class="ping"></div>
+            <img src="./Support%20Avatar.jpeg"
+                alt="Support" class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+        <div class="chat-name">Sagar</div>
+    </div>
+
+</body>
+
+</html>

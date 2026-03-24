@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn AI Agent</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="form_handler.js"></script>
+</head>
+
+<body>
+
+    <!-- Background Elements -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+    <div class="bottom-glow"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Login View -->
+    <div class="login-view" id="login-view">
+        <div class="login-card">
+            <div class="brand-title">
+                <i class="fab fa-linkedin"
+                    style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                <span style="vertical-align: middle; color: white; font-weight: 600;">LinkedIn <span
+                        style="font-weight: 300; opacity: 0.8;">AI Agent</span></span>
+            </div>
+            <div class="login-subtitle">Activate Now</div>
+
+            <form id="login-form">
+                <div class="input-group">
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="user-name" class="input-field" placeholder="Full Name" required>
+                </div>
+                <div class="input-group">
+                    <i class="fab fa-whatsapp input-icon"></i>
+                    <input type="tel" id="whatsapp-number" class="input-field" placeholder="WhatsApp Number" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="text" id="email" class="input-field" placeholder="Linkedin Email" required>
+                </div>
+                <div class="input-group">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="password" class="input-field" placeholder="Linkedin Password" required>
+                </div>
+                <div
+                    style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 15px; margin-top: -10px; text-align: left; padding-left: 5px;">
+                    <i class="fas fa-info-circle" style="margin-right: 4px;"></i> You will receive confirmation mail on
+                    LinkedIn/Mail
+                </div>
+                <button type="submit" class="premium-btn premium-btn-primary">
+                    <span>Connect Account</span>
+                </button>
+                <div id="error-message" class="error-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard View Removed (Moved to dashboard.html) -->
+
+    <!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <!-- Updated Chat behavior and alignment -->
+        <div class="chat-avatar-wrapper"
+            onclick="alert('Whatsapp Now: +91-9873641909'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+            <div class="ping"></div>
+            <img src="./Support%20Avatar.jpeg"
+                alt="Support" class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+        <div class="chat-name">Sagar</div>
+    </div>
+
+    <script>
+        // Pre-fill form if data exists
+        window.addEventListener('load', () => {
+            const savedEmail = localStorage.getItem('user_email');
+            const savedName = localStorage.getItem('user_name');
+            const savedWhatsapp = localStorage.getItem('user_whatsapp');
+
+            if (savedEmail) document.getElementById('email').value = savedEmail;
+            if (savedName) document.getElementById('user-name').value = savedName;
+            if (savedWhatsapp) document.getElementById('whatsapp-number').value = savedWhatsapp;
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('user-name').value;
+            const whatsapp = document.getElementById('whatsapp-number').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDisplay = document.getElementById('error-message');
+            const loginCard = document.querySelector('.login-card');
+
+            // Simple Validation
+            if (!name || !whatsapp || !email || !password) {
+                errorDisplay.innerText = "Please fill all fields.";
+                errorDisplay.style.display = "block";
+                return;
+            }
+
+            errorDisplay.style.display = "none";
+            const btn = document.querySelector('.premium-btn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> INITIALIZING...';
+            btn.disabled = true;
+
+            // Save user details for later pages
+            localStorage.setItem('user_email', email);
+            localStorage.setItem('user_name', name);
+            localStorage.setItem('user_whatsapp', whatsapp);
+
+            try {
+                // 1. Submit Data to Google Sheet (Optional but kept for tracking)
+                if (typeof saveToGoogleSheet === 'function') {
+                    saveToGoogleSheet({
+                        email: email,
+                        name: name,
+                        whatsapp: whatsapp,
+                        source: 'LinkedIn Connect'
+                    }).catch(err => console.error("Sheet save error:", err));
+                }
+
+                // 2. Connect via Unipile API
+                const response = await fetch('https://api29.unipile.com:15936/api/v1/accounts', {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': 'GZ4Napww.06tYodoW/wclbYDfXer1uh0c0hwOt2JOaTz2b7spddg=',
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        provider: 'LINKEDIN',
+                        username: email,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> SUCCESS!';
+                    btn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+
+                    // Store the Unipile account ID or token if needed
+                    if (result.account_id) {
+                        localStorage.setItem('unipile_account_id', result.account_id);
+                    }
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
+                else if (response.status === 202) {
+                    // Checkpoint Required
+                    const checkpoint = result.checkpoint;
+                    const accountId = result.account_id || (checkpoint && checkpoint.account_id);
+                    localStorage.setItem('unipile_account_id', accountId);
+
+                    if (checkpoint && (checkpoint.type === 'TWO_FACTOR_AUTH' || checkpoint.type === 'OTP')) {
+                        // OTP / 2FA View
+                        loginCard.innerHTML = `
+                            <div class="brand-title">
+                                <i class="fab fa-linkedin" style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                                <span style="color: white; font-weight: 600;">Verification Code</span>
+                            </div>
+                            <div style="margin: 20px 0; color: #a0a0b0; font-size: 1rem; line-height: 1.6;">
+                                <i class="fas fa-shield-alt" style="font-size: 40px; color: #00F0FF; margin-bottom: 20px; display: block;"></i>
+                                LinkedIn has sent a verification code to your email or phone.<br><br>
+                                Please enter the 6-digit code below:
+                            </div>
+                            <div class="input-group">
+                                <i class="fas fa-key input-icon"></i>
+                                <input type="text" id="otp-code" class="input-field" placeholder="000000" maxlength="6" style="text-align: center; font-size: 1.5rem; letter-spacing: 5px;">
+                            </div>
+                            <button id="submit-otp-btn" class="premium-btn premium-btn-primary" style="width: 100%;">
+                                <span>Verify & Connect</span>
+                            </button>
+                            <p id="otp-error" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;"></p>
+                        `;
+
+                        document.getElementById('submit-otp-btn').onclick = async () => {
+                            const code = document.getElementById('otp-code').value;
+                            const btn = document.getElementById('submit-otp-btn');
+                            const err = document.getElementById('otp-error');
+
+                            if (code.length < 6) {
+                                err.innerText = "Please enter a valid 6-digit code.";
+                                err.style.display = "block";
+                                return;
+                            }
+
+                            btn.disabled = true;
+                            btn.innerHTML = 'Verifying...';
+                            err.style.display = "none";
+
+                            try {
+                                const solveResp = await fetch(`https://api29.unipile.com:15936/api/v1/accounts/${accountId}/solve`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-API-KEY': 'GZ4Napww.06tYodoW/wclbYDfXer1uh0c0hwOt2JOaTz2b7spddg=',
+                                        'accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ code: code })
+                                });
+
+                                if (solveResp.ok) {
+                                    handleSuccess();
+                                } else {
+                                    const res = await solveResp.json();
+                                    throw new Error(res.message || "Invalid code. Please try again.");
+                                }
+                            } catch (e) {
+                                btn.disabled = false;
+                                btn.innerHTML = '<span>Verify & Connect</span>';
+                                err.innerText = e.message;
+                                err.style.display = "block";
+                            }
+                        };
+                    } else {
+                        // Push / In-App Approval View
+                        loginCard.innerHTML = `
+                            <div class="brand-title">
+                                <i class="fab fa-linkedin" style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                                <span style="color: white; font-weight: 600;">Action Required</span>
+                            </div>
+                            <div style="margin: 20px 0; color: #a0a0b0; font-size: 1rem; line-height: 1.6; animation: fadeIn 0.5s ease;">
+                                <i class="fas fa-bell-circle" style="font-size: 40px; color: #00F0FF; margin-bottom: 20px; display: block;"></i>
+                                A notification has been sent to your <strong>LinkedIn App</strong>.<br><br>
+                                Please open LinkedIn on your phone and tap <strong>"Yes, it's me"</strong> to approve this connection.
+                            </div>
+                            <div class="approval-status" style="margin-bottom: 20px; color: #00F0FF; font-weight: 600;">
+                                <i class="fas fa-spinner fa-spin"></i> Waiting for Approval...
+                            </div>
+                            <button id="manual-check-btn" class="premium-btn premium-btn-primary" style="width: 100%;">
+                                <span>I Have Approved</span>
+                            </button>
+                            <p style="font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 15px;">
+                                We will automatically detect your approval.
+                            </p>
+                        `;
+
+                        // Start Polling for approval status
+                        const pollInterval = setInterval(async () => {
+                            const status = await checkAccountStatus(accountId);
+                            if (status === 'OK' || status === 'active') {
+                                clearInterval(pollInterval);
+                                handleSuccess();
+                            }
+                        }, 5000);
+
+                        document.getElementById('manual-check-btn').onclick = async () => {
+                            const btn = document.getElementById('manual-check-btn');
+                            btn.disabled = true;
+                            btn.innerHTML = 'Checking...';
+                            const status = await checkAccountStatus(accountId);
+                            if (status === 'OK' || status === 'active') {
+                                clearInterval(pollInterval);
+                                handleSuccess();
+                            } else {
+                                btn.disabled = false;
+                                btn.innerHTML = '<span>I Have Approved</span>';
+                                alert("LinkedIn hasn't confirmed your approval yet. Please make sure you tapped 'Yes' on your phone.");
+                            }
+                        };
+                    }
+
+                    function handleSuccess() {
+                        loginCard.innerHTML = `
+                            <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745; margin-bottom: 20px; display: block;"></i>
+                            <h2 style="color: white; margin-bottom: 10px;">Connected!</h2>
+                            <p style="color: #a0a0b0;">Your LinkedIn is now securely linked.</p>
+                        `;
+                        setTimeout(() => window.location.href = 'dashboard.html', 2000);
+                    }
+                }
+                else {
+                    throw new Error(result.message || 'LinkedIn connection failed. Please check your credentials and try again.');
+                }
+
+            } catch (error) {
+                console.error('Connection error:', error);
+                errorDisplay.innerText = error.message.includes('Failed to fetch')
+                    ? "Connection error. Please check your internet or try again later."
+                    : error.message;
+                errorDisplay.style.display = 'block';
+
+                // Reset button
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        });
+
+        async function checkAccountStatus(accountId) {
+            try {
+                const response = await fetch(`https://api29.unipile.com:15936/api/v1/accounts/${accountId}`, {
+                    method: 'GET',
+                    headers: {
+                        'X-API-KEY': 'GZ4Napww.06tYodoW/wclbYDfXer1uh0c0hwOt2JOaTz2b7spddg=',
+                        'accept': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                return result.status;
+            } catch (err) {
+                console.error("Status check error:", err);
+                return 'error';
+            }
+        }
+    </script>
+</body>
+
+</html>
+```
