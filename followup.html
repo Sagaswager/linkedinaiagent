@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow Up Messages - LinkedIn AI Agent</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="form_handler.js"></script>
+
+    <style>
+        body {
+            background-color: #000000 !important;
+            background: #000000 !important;
+        }
+
+        /* Specific Styles for Follow Up Page */
+        .content-container {
+            width: 90%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 3rem;
+            /* Increased gap */
+            align-items: start;
+            height: calc(100vh - 240px);
+            /* Leave space for header and button: 180 + button height */
+            margin-top: 1rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Sidebar for Templates */
+        .templates-sidebar {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5rem;
+            height: 100%;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        .templates-sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .templates-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .template-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .template-title {
+            color: var(--accent);
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .template-body {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Main Form Area */
+        .inputs-area {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 10px;
+            /* space for scrollbar */
+        }
+
+        .inputs-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .inputs-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        .message-box {
+            width: 100%;
+            background: rgba(10, 10, 20, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            padding: 1rem;
+            font-size: 0.95rem;
+            font-family: 'Outfit', sans-serif;
+            resize: vertical;
+            min-height: 100px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .message-box:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(108, 99, 255, 0.2);
+        }
+
+        .message-box::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Back Button */
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 50;
+        }
+
+        .back-btn:hover {
+            color: white;
+        }
+
+        /* Force Button Visible override style.css if needed, specifically for this page ID */
+        #start-btn {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .content-container {
+                grid-template-columns: 300px 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-container {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                margin-top: 2rem;
+                padding-bottom: 4rem;
+                width: 100%;
+            }
+
+            .templates-sidebar {
+                width: 100%;
+                height: auto;
+                max-height: 250px;
+                /* Scrollable small area */
+                margin-bottom: 2rem;
+            }
+
+            .inputs-area {
+                width: 100%;
+                overflow-y: visible;
+                height: auto;
+            }
+
+            .page-title {
+                margin-top: 3rem;
+                font-size: var(--fs-h1);
+            }
+
+            .start-btn-container {
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+
+            .start-btn-container .premium-btn {
+                width: 100% !important;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Starry Background -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+
+    <!-- Background Glows -->
+    <div class="bottom-glow"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2" style="top: 20%; right: 20%;"></div>
+
+    <!-- Navigation -->
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+
+    <!-- Main Content -->
+    <div
+        style="width: 100%; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+
+        <h1 class="page-title"><i class="fab fa-linkedin" style="color: #0A66C2; margin-right: 12px;"></i>Follow Up
+            Messages</h1>
+        <p class="page-subtitle">Customize your sequence. Add at least 3 messages to start.</p>
+
+        <div class="content-container">
+
+            <!-- Sidebar with Templates -->
+            <div class="templates-sidebar">
+                <h3
+                    style="color: white; margin-bottom: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 1rem;">
+                    Suggested Templates</h3>
+
+                <div class="template-card">
+                    <div class="template-title"><i class="fas fa-smile"></i> The "Great to Meet You"</div>
+                    <div class="template-body">
+                        "Hi [Name], thanks for accepting my connection request! I’ve been following your work in
+                        [Industry] and am glad to have you in my network. Looking forward to keeping in touch. Best,
+                        [Your Name]"
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-title"><i class="fas fa-bullseye"></i> The "Specific Interest"</div>
+                    <div class="template-body">
+                        "Hi [Name], great to connect with you today! I noticed your recent activity regarding [Topic]
+                        and found your perspective really insightful. I’m quite active in the [Your Industry] space as
+                        well, so I'm happy to be connected. Best, [Your Name]"
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-title"><i class="fas fa-lightbulb"></i> The "Curiosity"</div>
+                    <div class="template-body">
+                        "Hi [Name], thanks for the connection! I’m currently exploring some new developments in
+                        [Specific Field] and saw you were a key player there. I’d love to learn more about your journey
+                        whenever you have a moment. Cheers, [Your Name]"
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Fields -->
+            <div class="inputs-area">
+                <div class="input-group">
+                    <label class="input-label">Message 1</label>
+                    <textarea class="message-box" id="msg-1" placeholder="Write your first follow-up message..."
+                        onkeyup="checkInputs()"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message 2</label>
+                    <textarea class="message-box" id="msg-2" placeholder="Write your second follow-up message..."
+                        onkeyup="checkInputs()"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message 3</label>
+                    <textarea class="message-box" id="msg-3" placeholder="Write your third follow-up message..."
+                        onkeyup="checkInputs()"></textarea>
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Message 4 (Optional)</label>
+                    <textarea class="message-box" id="msg-4" placeholder="Write an optional fourth message..."
+                        onkeyup="checkInputs()"></textarea>
+                </div>
+
+                <!-- Start Button (In-flow) -->
+                <div class="start-btn-container"
+                    style="margin-top: 2rem; position: static; width: 100%; display: flex; justify-content: flex-start; gap: 1.5rem;">
+                    <button class="premium-btn premium-btn-glass" id="save-btn" onclick="saveFollowupSettings(true)">
+                        <i class="fas fa-save"></i> Save Settings
+                    </button>
+                    <button class="premium-btn premium-btn-primary" id="start-btn" onclick="startFollowupCampaign()">
+                        <i class="fas fa-play"></i> Start Sequence
+                    </button>
+                </div>
+
+            </div> <!-- Close inputs-area -->
+        </div> <!-- Close content-container -->
+    </div> <!-- Close main content -->
+
+    <!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <div class="chat-avatar-wrapper"
+            onclick="alert('Support: +91-9873641909'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+            <div class="ping"></div>
+            <img src="./Support%20Avatar.jpeg"
+                alt="Support" class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+        <div class="chat-name">Sagar</div>
+    </div>
+
+    <script>
+        // Intro Animations
+        gsap.from(".page-title", { duration: 1, y: -30, opacity: 0, ease: "power3.out" });
+        gsap.from(".page-subtitle", { duration: 1, y: -20, opacity: 0, delay: 0.2, ease: "power3.out" });
+        gsap.from(".templates-sidebar", { duration: 1, x: -50, opacity: 0, delay: 0.4, ease: "power3.out" });
+        gsap.from(".input-group", { duration: 0.8, y: 30, opacity: 0, stagger: 0.1, delay: 0.6, ease: "power3.out" });
+
+        // Persistence Logic
+        window.addEventListener('load', () => {
+            const msg1 = localStorage.getItem('followup_msg_1');
+            const msg2 = localStorage.getItem('followup_msg_2');
+            const msg3 = localStorage.getItem('followup_msg_3');
+            const msg4 = localStorage.getItem('followup_msg_4');
+
+            if (msg1) document.getElementById('msg-1').value = msg1;
+            if (msg2) document.getElementById('msg-2').value = msg2;
+            if (msg3) document.getElementById('msg-3').value = msg3;
+            if (msg4) document.getElementById('msg-4').value = msg4;
+
+            checkInputs();
+        });
+
+        function saveFollowupSettings(isManual = false) {
+            const msg1 = document.getElementById('msg-1').value;
+            const msg2 = document.getElementById('msg-2').value;
+            const msg3 = document.getElementById('msg-3').value;
+            const msg4 = document.getElementById('msg-4').value;
+
+            localStorage.setItem('followup_msg_1', msg1);
+            localStorage.setItem('followup_msg_2', msg2);
+            localStorage.setItem('followup_msg_3', msg3);
+            localStorage.setItem('followup_msg_4', msg4);
+
+            if (isManual) {
+                const saveBtn = document.getElementById('save-btn');
+                const orig = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+                setTimeout(() => saveBtn.innerHTML = orig, 2000);
+            }
+        }
+
+        function checkInputs() {
+            const msg1 = document.getElementById('msg-1').value.trim();
+            const msg2 = document.getElementById('msg-2').value.trim();
+            const msg3 = document.getElementById('msg-3').value.trim();
+
+            const btn = document.getElementById('start-btn');
+
+            // Validation: Need at least 3 messages
+            if (msg1.length > 0 && msg2.length > 0 && msg3.length > 0) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+
+            // Auto-save on type
+            saveFollowupSettings(false);
+        }
+
+        async function startFollowupCampaign() {
+            saveFollowupSettings(false);
+
+            const btn = document.getElementById('start-btn');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> STARTING...';
+            btn.disabled = true;
+
+            const msg1 = document.getElementById('msg-1').value;
+            const msg2 = document.getElementById('msg-2').value;
+            const msg3 = document.getElementById('msg-3').value;
+            const msg4 = document.getElementById('msg-4').value;
+
+            if (typeof saveToGoogleSheet === 'function') {
+                await saveToGoogleSheet({
+                    message_1: msg1,
+                    message_2: msg2,
+                    message_3: msg3,
+                    message_4: msg4
+                });
+            }
+
+            setTimeout(() => {
+                localStorage.setItem('btn-3_status', 'ON');
+                window.location.href = 'dashboard.html';
+            }, 1000);
+        }
+    </script>
+</body>
+
+</html>
