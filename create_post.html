@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Post - LinkedIn AI Agent</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="form_handler.js"></script>
+
+    <style>
+        body {
+            background-color: #000000 !important;
+            background: #000000 !important;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .content-wrapper {
+            width: 90%;
+            max-width: 800px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .post-card {
+            background: rgba(30, 30, 35, 0.6);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .page-title {
+            color: white;
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .input-label {
+            color: var(--accent);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .post-textarea {
+            width: 100%;
+            min-height: 250px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            color: white;
+            font-size: 1.1rem;
+            font-family: 'Outfit', sans-serif;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .post-textarea:focus {
+            border-color: var(--primary);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(108, 99, 255, 0.2);
+        }
+
+        .post-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+        }
+
+        .premium-btn {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            color: white;
+            box-shadow: 0 10px 20px rgba(108, 99, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(108, 99, 255, 0.5);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 40px;
+            left: 40px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            color: white;
+            transform: translateX(-5px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Starry Background -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+
+    <!-- Background Glows -->
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+
+    <div class="content-wrapper">
+        <div class="post-card">
+            <h1 class="page-title">Create AI Post</h1>
+            <p class="page-subtitle">Draft your next viral LinkedIn post with AI automation.</p>
+            
+            <span class="input-label">Post Content</span>
+            <textarea class="post-textarea" id="post-content" placeholder="Type your automation post here... or paste a draft you want the AI agent to optimize and post for you."></textarea>
+
+            <div class="btn-container">
+                <button class="premium-btn btn-glass" onclick="saveDraft()">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button class="premium-btn btn-primary" id="start-btn" onclick="startAutomation()">
+                    <i class="fas fa-rocket"></i> Start Automation
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load existing draft if any
+        window.addEventListener('load', () => {
+            const savedPost = localStorage.getItem('automation_post_draft');
+            if (savedPost) {
+                document.getElementById('post-content').value = savedPost;
+            }
+        });
+
+        function saveDraft() {
+            const content = document.getElementById('post-content').value;
+            localStorage.setItem('automation_post_draft', content);
+            
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Draft Saved';
+            setTimeout(() => btn.innerHTML = originalText, 2000);
+        }
+
+        async function startAutomation() {
+            const content = document.getElementById('post-content').value;
+            if (!content.trim()) {
+                alert("Please enter some content for your post.");
+                return;
+            }
+
+            const btn = document.getElementById('start-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> INITIALIZING...';
+            btn.disabled = true;
+
+            // Retrieve the stored unipile_account_id
+            const accountId = localStorage.getItem('unipile_account_id');
+            if (!accountId) {
+                alert("No LinkedIn account connected. Please connect your account first.");
+                window.location.href = 'dashboard.html';
+                return;
+            }
+
+            try {
+                // 1. Send to our new Flask Backend API
+                const resp = await fetch('/api/post', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        account_id: accountId,
+                        text: content
+                    })
+                });
+
+                const result = await resp.json();
+
+                if (result.success) {
+                    // Success UI
+                    btn.innerHTML = '<i class="fas fa-check"></i> Post Successful!';
+                    btn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+                    
+                    // Also save for historical tracking
+                    localStorage.setItem('automation_post_draft', content);
+                    localStorage.setItem('btn-4_status', 'ON'); 
+
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    throw new Error(result.message || "Failed to automate post.");
+                }
+
+            } catch (e) {
+                console.error("Automation error:", e);
+                alert("Error: " + e.message);
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+
+</html>

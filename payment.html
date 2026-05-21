@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment for a Month - LinkedIn AI Agent</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #000000 !important;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            /* Changed from center to flex-start to allow scrolling without clipping top */
+            padding-top: 80px;
+            /* Space for back button */
+            padding-bottom: 40px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .payment-container {
+            width: 100%;
+            max-width: 500px;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .payment-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .payment-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+
+        .plan-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 1.5rem 0;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
+        }
+
+        .plan-period {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .features-list {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: left;
+            padding: 0 1rem;
+        }
+
+        .features-list li {
+            color: white;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.05rem;
+        }
+
+        .features-list li i {
+            color: #00ff88;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(108, 99, 255, 0.4);
+            margin-top: 1rem;
+        }
+
+        .pay-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(108, 99, 255, 0.6);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .back-link:hover {
+            color: white;
+        }
+
+        .video-section {
+            margin-top: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 2rem;
+        }
+
+        .video-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .video-section-title i {
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .video-wrapper {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(108, 99, 255, 0.2);
+            background: #000;
+            aspect-ratio: 16 / 9;
+        }
+
+        .video-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 18px;
+            z-index: -1;
+            opacity: 0.4;
+            filter: blur(6px);
+        }
+
+        .video-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        .video-caption {
+            margin-top: 0.75rem;
+            font-size: 0.82rem;
+            color: rgba(255, 255, 255, 0.35);
+            text-align: center;
+            letter-spacing: 0.3px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .payment-container {
+                padding: 1rem;
+                margin-top: 2rem;
+            }
+
+            .payment-card {
+                padding: 2.5rem 1.5rem;
+            }
+
+            .plan-title {
+                font-size: 1.8rem;
+            }
+
+            .plan-price {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .payment-card {
+                padding: 2rem 1rem;
+            }
+
+            .plan-price {
+                font-size: 2.2rem;
+            }
+
+            .features-list {
+                padding: 1rem;
+            }
+
+            .features-list li {
+                font-size: 0.95rem;
+            }
+
+            .qr-section img {
+                width: 200px !important;
+            }
+        }
+
+        /* Strict Black & White Theme overrides */
+        :root {
+            --primary: #ffffff !important;
+            --accent: #ffffff !important;
+            --btn-hover: rgba(255, 255, 255, 0.2) !important;
+            --text-muted: #888888 !important;
+            --glass-surface: rgba(255, 255, 255, 0.03) !important;
+            --glass-border: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        body {
+            background-color: #000000 !important;
+            background: #000000 !important;
+            color: #ffffff !important;
+        }
+
+        .bg-glow {
+            display: none !important;
+        }
+
+        /* Override link colors and details */
+        .plan-price {
+            color: #ffffff !important;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .features-list li i {
+            color: #ffffff !important;
+        }
+
+        /* Pay and Activate Buttons - Black & White */
+        .pay-btn, #activate-now-btn {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #ffffff !important;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1) !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .pay-btn:hover, #activate-now-btn:hover {
+            background: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        /* Whatsapp green button reset to Black & White */
+        .whatsapp-green-btn {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #ffffff !important;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1) !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .whatsapp-green-btn:hover {
+            background: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px) !important;
+        }
+
+        .whatsapp-green-btn i {
+            color: inherit !important;
+        }
+
+        /* Video wrapper borders and caption */
+        .video-wrapper::before {
+            background: #ffffff !important;
+            opacity: 0.2 !important;
+            filter: none !important;
+        }
+
+        .video-section-title i {
+            color: #ffffff !important;
+        }
+
+        /* Coupon style input fields */
+        .coupon-section .input-field {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+            padding: 0.8rem 1rem !important;
+            border-radius: 8px !important;
+            font-size: 0.95rem !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .coupon-section .input-field:focus {
+            border-color: #ffffff !important;
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2) !important;
+            outline: none !important;
+        }
+
+        #apply-coupon-btn {
+            background: #ffffff !important;
+            color: #000000 !important;
+            border: 1px solid #ffffff !important;
+            transition: all 0.3s ease !important;
+        }
+
+        #apply-coupon-btn:hover {
+            background: #000000 !important;
+            color: #ffffff !important;
+            border-color: #ffffff !important;
+        }
+
+        /* Back Button overrides */
+        .back-btn:hover {
+            border-color: #ffffff !important;
+            color: white !important;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
+        }
+
+        /* Chat widget overrides */
+        .online-dot {
+            background: #ffffff !important;
+            box-shadow: 0 0 8px #ffffff !important;
+        }
+        .ping {
+            background: #ffffff !important;
+        }
+        .chat-tooltip {
+            background: #ffffff !important;
+            color: #000000 !important;
+        }
+        .chat-avatar-wrapper:hover {
+            border-color: #ffffff !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+    <div class="bg-glow bg-glow-1" style="top: -10%; left: -10%;"></div>
+    <div class="bg-glow bg-glow-2" style="bottom: -10%; right: -10%;"></div>
+
+    <!-- Back Button -->
+    <a href="dashboard.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="payment-container">
+        <div class="payment-card">
+            <h1 class="page-title" style="margin-bottom: 0.5rem; font-size: 2.2rem; color: #ffffff;">
+                <i class="fab fa-linkedin" style="color: #ffffff; margin-right: 12px;"></i>10 Days FREE
+            </h1>
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 0.5px;">Unlock the full power of AI Agent</p>
+
+            <div style="margin-bottom: -0.5rem;">
+                <span style="text-decoration: line-through; color: rgba(255,255,255,0.4); font-size: 1.1rem; font-weight: 400;">₹ 7000/-</span>
+            </div>
+            <div class="plan-price" style="margin: 0.5rem 0; color: #ffffff; text-shadow: none;">
+                <span id="price-display">₹ 3000/-</span><span class="plan-period">/Month</span>
+            </div>
+
+            <!-- Activate Now Button -->
+            <button id="activate-now-btn" class="pay-btn" style="width: 100%; margin-top: 1rem; margin-bottom: 1.5rem;">
+                Activate Now
+            </button>
+
+            <!-- Coupon Code Section -->
+            <div class="coupon-section" style="margin-bottom: 2rem; text-align: left;">
+                <label for="coupon-code" style="color: var(--text-muted); font-size: 0.85rem; display: block; margin-bottom: 0.5rem; font-weight: 600; letter-spacing: 0.5px;">COUPON CODE</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="coupon-code" class="input-field" placeholder="Enter coupon (e.g. AIAGENT)" style="flex-grow: 1; padding: 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; text-transform: uppercase;">
+                    <button id="apply-coupon-btn" style="padding: 0.8rem 1.5rem; background: #ffffff; color: #000000; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s;">Apply</button>
+                </div>
+                <div id="coupon-message" style="margin-top: 0.5rem; font-size: 0.9rem; display: none; font-weight: 500; color: #ffffff;"></div>
+            </div>
+
+            <ul class="features-list"
+                style="background: rgba(255,255,255,0.02); border-radius: 16px; padding: 1.5rem; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 2rem;">
+                <li><i class="fas fa-rocket"></i> AI connections & messaging</li>
+                <li><i class="fas fa-bolt"></i> Smart Lead Generation</li>
+                <li><i class="fas fa-robot"></i> Automated Post Reactions</li>
+                <li><i class="fas fa-clock"></i> 24/7 Background Operation</li>
+                <li style="color: #ffffff;">
+                    <i class="fab fa-whatsapp" style="color: #ffffff !important;"></i> Priority Support 24/7
+                </li>
+            </ul>
+
+            <!-- QR and Confirmation Container (hidden initially) -->
+            <div id="qr-confirmation-container" style="display: none; margin-top: 2rem; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 2rem; animation: fadeIn 0.5s ease-out;">
+                <!-- UPI QR Code Section -->
+                <div class="qr-section" style="margin-bottom: 2.5rem;">
+                    <div style="position: relative; display: inline-block;">
+                        <div
+                            style="position: absolute; inset: -4px; background: #ffffff; border-radius: 20px; z-index: -1; filter: blur(5px); opacity: 0.3;">
+                        </div>
+                        <div style="background: white; padding: 12px; border-radius: 16px; display: inline-block;">
+                            <img src="./payment-qr.jpg.jpeg" alt="Scan to Pay"
+                                style="width: 240px; height: auto; display: block; border-radius: 8px;">
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px; color: #ffffff; font-size: 0.95rem; font-weight: 500;">
+                        <i class="fas fa-qrcode" style="margin-right: 8px;"></i>Scan to Pay via UPI
+                    </div>
+                </div>
+
+                <button class="premium-btn whatsapp-green-btn" style="width: 100%;"
+                    onclick="alert('Please send a screenshot of your payment to WhatsApp: +91-9873641909\n\nClick OK to open WhatsApp.'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+                    <i class="fab fa-whatsapp" style="font-size: 1.5rem;"></i> Confirm with Team
+                </button>
+            </div>
+
+            <!-- Demo Video Section -->
+            <div class="video-section">
+                <div class="video-section-title">
+                    <i class="fas fa-play-circle"></i> Watch How It Works
+                </div>
+                <div class="video-wrapper">
+                    <iframe src="https://drive.google.com/file/d/1YGU5TDy7IyoPLi-ZkZn8YBnVHg8Lg70c/preview"
+                        allow="autoplay" allowfullscreen loading="lazy" title="LinkedIn AI Agent Demo Video">
+                    </iframe>
+                </div>
+                <p class="video-caption">See the LinkedIn AI Agent in action before you subscribe</p>
+            </div>
+
+            <br>
+            <a href="dashboard.html" class="back-link"
+                style="text-transform: uppercase; font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; color: rgba(255,255,255,0.3);">
+                Cancel &amp; Return
+            </a>
+        </div>
+    </div>
+
+    <!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <div class="chat-avatar-wrapper"
+            onclick="alert('Support: +91-9873641909'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+            <div class="ping"></div>
+            <img src="./Support%20Avatar.jpeg" alt="Support" class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+        <div class="chat-name">Sagar</div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const couponInput = document.getElementById('coupon-code');
+            const applyBtn = document.getElementById('apply-coupon-btn');
+            const couponMessage = document.getElementById('coupon-message');
+            const priceDisplay = document.getElementById('price-display');
+            const activateBtn = document.getElementById('activate-now-btn');
+            const qrContainer = document.getElementById('qr-confirmation-container');
+
+            function checkAndApplyCoupon(showFeedback = true) {
+                const code = couponInput.value.trim().toUpperCase();
+                if (code === 'AIAGENT') {
+                    couponMessage.innerHTML = '<i class="fas fa-check-circle"></i> Coupon Applied: Rs. 1000/- OFF';
+                    couponMessage.style.color = '#ffffff';
+                    couponMessage.style.display = 'block';
+                    return true;
+                } else if (code !== '') {
+                    if (showFeedback) {
+                        couponMessage.innerHTML = '<i class="fas fa-times-circle"></i> Invalid Coupon Code';
+                        couponMessage.style.color = '#888888';
+                        couponMessage.style.display = 'block';
+                    }
+                    return false;
+                } else {
+                    couponMessage.style.display = 'none';
+                    return false;
+                }
+            }
+
+            couponInput.addEventListener('input', () => {
+                const code = couponInput.value.trim().toUpperCase();
+                if (code === 'AIAGENT') {
+                    checkAndApplyCoupon(false);
+                } else if (code === '') {
+                    couponMessage.style.display = 'none';
+                }
+            });
+
+            applyBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                checkAndApplyCoupon(true);
+            });
+
+            activateBtn.addEventListener('click', () => {
+                const isCouponApplied = checkAndApplyCoupon(false);
+                if (isCouponApplied) {
+                    priceDisplay.innerText = '₹ 2000/-';
+                } else {
+                    priceDisplay.innerText = '₹ 3000/-';
+                }
+
+                qrContainer.style.display = 'block';
+                qrContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            });
+        });
+    </script>
+</body>
+
+</html>

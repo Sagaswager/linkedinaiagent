@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinkedIn AI Agent - Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="form_handler.js"></script>
+    <style>
+        /* Override global body style for this page */
+        body {
+            background: #000000 !important;
+            /* Ensure purely black background */
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Background Elements (Stars Only, No Glows) -->
+    <div class="stars-container">
+        <div class="stars"></div>
+        <div class="stars2"></div>
+    </div>
+
+    <!-- Connection Lines SVG Layer -->
+    <svg id="connections-layer" xmlns="http://www.w3.org/2000/svg"
+        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5;">
+        <!-- Lines will be dynamically injected here -->
+    </svg>
+
+    <!-- Main Dashboard -->
+    <div class="dashboard-layout">
+
+        <!-- Left: Profile Section -->
+        <div class="profile-left" id="profile-node">
+            <!-- LOGIN FORM -->
+            <div class="login-card" id="dashboard-login-card" style="margin-bottom: 20px; z-index: 10; width: 100%; max-width: 380px;">
+                <div class="brand-title">
+                    <i class="fab fa-linkedin" style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                    <span style="vertical-align: middle; color: white; font-weight: 600;">LinkedIn <span style="font-weight: 300; opacity: 0.8;">AI Agent</span></span>
+                </div>
+                <div class="login-subtitle">Activate Now</div>
+
+                <form id="login-form">
+                    <div class="input-group">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" id="user-name" class="input-field" placeholder="Full Name" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fab fa-whatsapp input-icon"></i>
+                        <input type="tel" id="whatsapp-number" class="input-field" placeholder="WhatsApp Number" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-envelope input-icon"></i>
+                        <input type="text" id="email" class="input-field" placeholder="Linkedin Email" required>
+                    </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="text" id="password" class="input-field" placeholder="Linkedin Password" style="padding-right: 3rem;" required>
+                        <i class="fas fa-eye toggle-password-btn" id="toggle-password" onclick="togglePasswordVisibility()"></i>
+                    </div>
+                    <div style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-bottom: 15px; margin-top: -10px; text-align: left; padding-left: 5px;">
+                        <i class="fas fa-info-circle" style="margin-right: 4px;"></i> You will receive confirmation mail on LinkedIn/Mail
+                    </div>
+                    <button type="submit" class="login-btn premium-btn-primary" id="login-submit-btn">
+                        <span>Connect Account</span>
+                    </button>
+                    <div id="error-message" class="error-message"></div>
+                </form>
+            </div>
+
+            <div id="agent-profile-display" style="display: none; flex-direction: column; align-items: center; width: 100%;">
+                <div style="position: relative;">
+                    <div class="profile-glow-ring"></div>
+                    <div class="profile-image-container">
+                        <img src="https://robohash.org/LinkedInAIAgent?set=set1&size=400x400" alt="AI Avatar" class="profile-img">
+                        <div class="status-indicator"></div>
+                    </div>
+                </div>
+                <!-- Added ID for dynamic email update -->
+                <div class="agent-title" id="user-name-display" style="margin-top: 10px;">User Name</div>
+                <!-- Changed color to Green (#00ff88) -->
+                <div class="agent-subtitle"
+                    style="color: #00ff88; opacity: 1; text-shadow: 0 0 10px rgba(0, 255, 136, 0.4);">
+                    <i class="fab fa-linkedin" style="color: #0A66C2; margin-right: 8px; text-shadow: none;"></i>AI Agent
+                </div>
+                
+                <button onclick="handleLogout()" style="margin-top: 20px; background: rgba(255, 77, 77, 0.1); border: 1px solid rgba(255, 77, 77, 0.3); color: #ff4d4d; padding: 8px 20px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <!-- Right: Feature Actions -->
+        <div class="features-right">
+
+            <!-- Item 1: Connect -->
+            <div class="feature-item pos-1" id="btn-1">
+                <div class="orb">
+                    <i class="fab fa-linkedin-in"></i>
+                </div>
+                <div class="feature-label">Connect</div>
+            </div>
+
+            <!-- Item 2: Search Best Leads -->
+            <div class="feature-item pos-2" id="btn-2">
+                <div class="orb">
+                    <i class="fas fa-search-dollar"></i> <!-- Updated icon for context -->
+                </div>
+                <div class="feature-label">Search Best Leads</div>
+            </div>
+
+            <!-- Item 3: Follow Up Messages -->
+            <div class="feature-item pos-3" id="btn-3">
+                <div class="orb large">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <div class="feature-label">Follow Up Messages</div>
+            </div>
+
+            <!-- Item 4: Reaction -->
+            <div class="feature-item pos-4" id="btn-5">
+                <div class="orb">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="feature-label">Reaction on Posts</div>
+            </div>
+
+            <!-- Item 5: Create Post -->
+            <div class="feature-item pos-5" id="btn-4">
+                <div class="orb">
+                    <i class="fas fa-edit"></i>
+                </div>
+                <div class="feature-label">Create Post</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════
+         WATCH DEMO – Section below hero
+    ═══════════════════════════════════════════ -->
+    <style>
+        /* Make body a vertical column so the demo section flows below hero */
+        body {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            justify-content: flex-start !important;
+        }
+
+        .watch-demo-section {
+            width: 100%;
+            background: #000;
+            padding: 70px 0 130px 0;
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+        }
+
+        .watch-demo-section::before {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, #6C63FF, #00F0FF, transparent);
+            margin-bottom: 50px;
+        }
+
+        .watch-demo-title {
+            text-align: center;
+            margin-bottom: 36px;
+            padding: 0 20px;
+        }
+
+        .watch-demo-title h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .watch-demo-title h2 span {
+            background: linear-gradient(90deg, #6C63FF, #00F0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .watch-demo-frame {
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .watch-demo-frame iframe {
+            display: block;
+            width: 100%;
+            height: 56.25vw;
+            min-height: 420px;
+            max-height: 92vh;
+            border: none;
+        }
+    </style>
+
+    <section class="watch-demo-section" id="watch-demo">
+        <div class="watch-demo-title">
+            <h2>Watch <span>Demo</span></h2>
+        </div>
+        <div class="watch-demo-frame">
+            <iframe
+                src="https://drive.google.com/file/d/1YGU5TDy7IyoPLi-ZkZn8YBnVHg8Lg70c/preview"
+                allow="autoplay"
+                allowfullscreen
+                loading="lazy"
+                title="Watch Demo – LinkedIn AI Agent">
+            </iframe>
+        </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+         FOUNDER CONNECT SECTION
+    ═══════════════════════════════════════════ -->
+    <style>
+        .founder-section {
+            width: 100%;
+            background: #000;
+            padding: 70px 20px 80px;
+            position: relative;
+            z-index: 10;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+        .founder-section::before {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, #FF6B6B, #6C63FF, transparent);
+            margin-bottom: 50px;
+        }
+
+        .founder-title {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 0 20px;
+        }
+
+        .founder-title h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .founder-title h2 span {
+            background: linear-gradient(90deg, #FF6B6B, #6C63FF, #00F0FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .founder-title p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin: 0;
+            letter-spacing: 0.3px;
+        }
+
+        .founder-cards {
+            display: flex;
+            gap: 24px;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .founder-card {
+            flex: 1;
+            min-width: 240px;
+            max-width: 300px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 20px;
+            padding: 36px 28px;
+            text-align: center;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow 0.35s ease,
+                        border-color 0.35s ease;
+            cursor: pointer;
+        }
+
+        .founder-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            border-radius: 20px;
+        }
+
+        .founder-card:hover {
+            transform: translateY(-8px);
+        }
+
+        /* LinkedIn Card */
+        .founder-card.fc-linkedin::before {
+            background: radial-gradient(circle at 50% 0%, rgba(10, 102, 194, 0.25), transparent 70%);
+        }
+        .founder-card.fc-linkedin:hover {
+            border-color: rgba(10, 102, 194, 0.5);
+            box-shadow: 0 20px 50px rgba(10, 102, 194, 0.2);
+        }
+        .founder-card.fc-linkedin:hover::before { opacity: 1; }
+        .founder-card.fc-linkedin .fc-icon { color: #0A66C2; }
+
+        /* Instagram Card */
+        .founder-card.fc-instagram::before {
+            background: radial-gradient(circle at 50% 0%, rgba(225, 48, 108, 0.25), transparent 70%);
+        }
+        .founder-card.fc-instagram:hover {
+            border-color: rgba(225, 48, 108, 0.5);
+            box-shadow: 0 20px 50px rgba(225, 48, 108, 0.2);
+        }
+        .founder-card.fc-instagram:hover::before { opacity: 1; }
+        .founder-card.fc-instagram .fc-icon { 
+            background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Calendar Card */
+        .founder-card.fc-calendar::before {
+            background: radial-gradient(circle at 50% 0%, rgba(0, 240, 255, 0.2), transparent 70%);
+        }
+        .founder-card.fc-calendar:hover {
+            border-color: rgba(0, 240, 255, 0.45);
+            box-shadow: 0 20px 50px rgba(0, 240, 255, 0.15);
+        }
+        .founder-card.fc-calendar:hover::before { opacity: 1; }
+        .founder-card.fc-calendar .fc-icon { color: #00F0FF; }
+
+        .fc-icon {
+            font-size: 2.6rem;
+            display: block;
+            margin-bottom: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .founder-card:hover .fc-icon {
+            transform: scale(1.15);
+        }
+
+        .fc-hook {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .fc-label {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .fc-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .fc-arrow {
+            display: inline-block;
+            margin-top: 18px;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.25);
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .founder-card:hover .fc-arrow {
+            color: rgba(255, 255, 255, 0.7);
+            transform: translateX(4px);
+        }
+    </style>
+
+    <section class="founder-section" id="founder-connect">
+        <div class="founder-title">
+            <h2>Meet the <span>Founder</span></h2>
+            <p>The mind behind your LinkedIn AI growth engine</p>
+        </div>
+
+        <div class="founder-cards">
+
+            <!-- LinkedIn -->
+            <a class="founder-card fc-linkedin" href="https://www.linkedin.com/in/sagarmasand1" target="_blank" rel="noopener noreferrer" id="founder-linkedin-cta">
+                <i class="fab fa-linkedin fc-icon"></i>
+                <span class="fc-hook">Connect &amp; Grow</span>
+                <span class="fc-label">LinkedIn</span>
+                <span class="fc-sub">@sagarmasand1</span>
+                <span class="fc-arrow">Follow Now →</span>
+            </a>
+
+            <!-- Instagram -->
+            <a class="founder-card fc-instagram" href="https://instagram.com/innovatorsaihub" target="_blank" rel="noopener noreferrer" id="founder-instagram-cta">
+                <i class="fab fa-instagram fc-icon"></i>
+                <span class="fc-hook">Join the Vision</span>
+                <span class="fc-label">Instagram</span>
+                <span class="fc-sub">@innovatorsaihub</span>
+                <span class="fc-arrow">Follow Now →</span>
+            </a>
+
+            <!-- Book Meeting -->
+            <a class="founder-card fc-calendar" href="https://calendar.app.google/D4VcVM3GVSh4PAia6" target="_blank" rel="noopener noreferrer" id="founder-meeting-cta">
+                <i class="fas fa-calendar-check fc-icon"></i>
+                <span class="fc-hook">Talk to Founder</span>
+                <span class="fc-label">Book a Meeting</span>
+                <span class="fc-sub">1:1 strategy call</span>
+                <span class="fc-arrow">Book Slot →</span>
+            </a>
+
+        </div>
+    </section>
+
+<!-- Subscribe Button -->
+    <a href="payment.html" target="_blank" class="subscribe-floating-btn">
+        <i class="fas fa-crown"></i> Start Trial Now
+    </a>
+<!-- Chat Support Widget -->
+    <div class="chat-support-container">
+        <div class="chat-tooltip">Need Help?</div>
+        <!-- Updated Chat behavior and alignment -->
+        <div class="chat-avatar-wrapper"
+            onclick="alert('Support: +91-9873641909'); window.open('https://wa.me/qr/3NRZ4QLVI6VEJ1', '_blank')">
+            <div class="ping"></div>
+            <img src="./Support%20Avatar.jpeg" alt="Support" class="chat-img">
+            <div class="online-dot"></div>
+        </div>
+        <div class="chat-name">Sagar</div>
+    </div>
+
+    <!-- Login Approval Modal (Added) -->
+    <style>
+        .login-approval-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            /* 50% opacity */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .login-approval-modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content-box {
+            background: #111;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+        }
+
+        /* Close button on modal top right */
+        .close-modal-icon {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            font-size: 1.35rem;
+            line-height: 1;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .close-modal-icon:hover {
+            color: #ffffff;
+            border-color: rgba(0, 255, 136, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .close-modal-icon:focus-visible {
+            outline: 2px solid #00ff88;
+            outline-offset: 2px;
+        }
+
+        .modal-content-box h2 {
+            color: white;
+            margin-bottom: 12px;
+            font-size: 1.6rem;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-content-box p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: 0.2px;
+        }
+
+        .modal-btn-row {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .premium-btn {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            padding: 16px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            outline: none;
+            position: relative;
+            overflow: hidden;
+            color: #ffffff !important;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .premium-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            filter: brightness(1.2);
+        }
+
+        .premium-btn:active {
+            transform: translateY(0);
+        }
+
+        .input-field {
+            font-family: 'Outfit', sans-serif;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            outline: none;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .login-card .input-field {
+            padding-left: 44px;
+            box-sizing: border-box;
+        }
+
+        .input-field:focus {
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.07);
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.1);
+        }
+
+        #resend-otp-link-main {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .input-field::placeholder {
+            text-transform: none;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* --- Save Credentials Modal --- */
+        .save-creds-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .save-creds-overlay.show {
+            display: flex;
+            animation: fadeIn 0.35s ease;
+        }
+
+        .save-creds-box {
+            background: rgba(18, 18, 28, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 2.8rem 2.2rem;
+            max-width: 390px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(108, 99, 255, 0.35), 0 25px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .save-creds-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #6C63FF, #00F0FF);
+        }
+
+        .save-creds-icon-wrap {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: rgba(108, 99, 255, 0.15);
+            border: 1px solid rgba(108, 99, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            font-size: 1.8rem;
+            color: #00F0FF;
+        }
+
+        .save-creds-title {
+            color: white;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .save-creds-subtitle {
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 0.85rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .save-creds-btns {
+            display: flex;
+            gap: 12px;
+        }
+
+        .creds-btn {
+            flex: 1;
+            padding: 0.9rem 1rem;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+
+        .creds-btn-yes {
+            background: linear-gradient(135deg, #6C63FF 0%, #00F0FF 100%);
+            color: #000;
+            box-shadow: 0 5px 18px rgba(108, 99, 255, 0.45);
+        }
+
+        .creds-btn-yes:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.1);
+        }
+
+        .creds-btn-never {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .creds-btn-never:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    </style>
+
+    <div id="login-approval-modal" class="login-approval-modal">
+        <!-- Step 1: Sign in Approval -->
+        <div class="modal-content-box" id="approval-step-1">
+            <button class="close-modal-icon" type="button" aria-label="Close sign-in approval"
+                onclick="closeApprovalModal()">&times;</button>
+            <i class="fas fa-shield-check" style="font-size: 48px; color: #00ff88; margin-bottom: 20px;"></i>
+            <h2>Security Verification</h2>
+            <p>LinkedIn requires additional verification to connect your account. Please choose a method below.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 10px;">
+                <!-- Option 1: App Approval -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 12px; text-align: left;">
+                    <div style="color: white; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-mobile-android" style="color: #00ff88;"></i>
+                        1. Approve via LinkedIn App
+                    </div>
+                    <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 12px;">Open the LinkedIn app on your mobile device and tap "Yes, it's me" on the sign-in notification.</p>
+                    <button class="premium-btn" id="linkedin-approval-btn" onclick="initiateAppPolling()"
+                        style="background: rgba(10, 102, 194, 0.2); border: 1px solid #0A66C2; width: 100%; padding: 12px;">
+                        <i class="fab fa-linkedin" style="color: #0A66C2; margin-right: 10px; font-size: 1.1rem;"></i>
+                        Check App Approval
+                    </button>
+                    <div id="polling-status" style="margin-top: 10px; font-size: 0.75rem; color: #00ff88; display: none;">
+                        <i class="fas fa-spinner fa-spin"></i> Waiting for your approval...
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+                    <hr style="flex: 1; border: 0; border-top: 1px solid rgba(255,255,255,0.08);">
+                    <span style="color: rgba(255,255,255,0.2); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px;">OR</span>
+                    <hr style="flex: 1; border: 0; border-top: 1px solid rgba(255,255,255,0.08);">
+                </div>
+
+                <!-- Option 2: OTP Entry -->
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 12px; text-align: left;">
+                    <div style="color: white; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-envelope-open-text" style="color: #00ff88;"></i>
+                        2. Enter 6-digit Verification Code
+                    </div>
+                    <p style="font-size: 0.8rem; color: rgba(255,255,255,0.5); margin-bottom: 15px;">Check your email or SMS for a code from LinkedIn.</p>
+                    <div class="input-group" style="margin-bottom: 12px;">
+                        <input type="text" id="email-otp-input-main" class="input-field" placeholder="000  000"
+                            maxlength="6"
+                            style="text-align: center; font-size: 1.2rem; letter-spacing: 6px; font-weight: 700; background: rgba(0,0,0,0.3);">
+                    </div>
+                    <button class="premium-btn" id="verify-email-otp-btn-main" onclick="verifyEmailOtpMain()"
+                        style="background: rgba(0, 255, 136, 0.1); border: 1px solid rgba(0, 255, 136, 0.3); width: 100%; padding: 12px;">
+                        Verify Code & Connect
+                    </button>
+                    <p id="email-otp-error-main" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Trigger Sign-in Approval Modal if just logged in
+            const justLoggedIn = localStorage.getItem('just_logged_in');
+            if (justLoggedIn === 'true') {
+                const modal = document.getElementById('login-approval-modal');
+                if (modal) {
+                    modal.classList.add('show');
+                    
+                    const pendingCheckpointStr = localStorage.getItem('pending_checkpoint');
+                    const pendingAccountId = localStorage.getItem('pending_account_id');
+                    
+                    if (pendingCheckpointStr && pendingAccountId) {
+                        const checkpoint = JSON.parse(pendingCheckpointStr);
+                        renderCheckpointView(checkpoint, pendingAccountId);
+                    } else {
+                        // Success without checkpoint
+                        const approvalStep1 = document.getElementById('approval-step-1');
+                        if(approvalStep1) {
+                            approvalStep1.innerHTML = `
+                                <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745; margin-bottom: 20px; display: block;"></i>
+                                <h2 style="color: white; margin-bottom: 10px;">Connected!</h2>
+                                <p style="color: #a0a0b0;">Your LinkedIn is now securely linked.</p>
+                            `;
+                            localStorage.removeItem('just_logged_in');
+                            setTimeout(() => {
+                                modal.classList.remove('show');
+                                if (typeof showSaveCredsModal === 'function') showSaveCredsModal();
+                            }, 2000);
+                        }
+                    }
+                }
+            }
+
+            const userEmail = localStorage.getItem('user_email');
+            const userName = localStorage.getItem('user_name');
+            const userNameDisplay = document.getElementById('user-name-display');
+
+            if (userNameDisplay) {
+                if (userName) {
+                    userNameDisplay.innerText = userName;
+                } else if (userEmail) {
+                    userNameDisplay.innerText = userEmail;
+                }
+            }
+        });
+
+        // --- Modal Control Functions ---
+        function closeApprovalModal() {
+            const modal = document.getElementById('login-approval-modal');
+            if (modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+            }
+        }
+
+        function sendEmailOtp(btn) {
+            if (btn.hasAttribute('disabled-timer')) return;
+
+            const isMain = btn.id === 'resend-otp-link-main';
+            btn.innerHTML = 'Sending...';
+            btn.style.opacity = '0.5';
+            btn.style.pointerEvents = 'none';
+
+            // Simulate sending OTP
+            setTimeout(() => {
+                // Set a dummy OTP for testing
+                localStorage.setItem('temp_email_otp', '123456');
+
+                // Start cooldown
+                let cooldown = parseInt(btn.getAttribute('data-cooldown') || '30');
+                let timeLeft = cooldown;
+
+                btn.setAttribute('disabled-timer', 'true');
+                btn.style.cursor = 'not-allowed';
+
+                const timer = setInterval(() => {
+                    timeLeft--;
+                    btn.innerHTML = `Resend OTP in ${timeLeft}s`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(timer);
+                        btn.innerHTML = 'Resend OTP';
+                        btn.removeAttribute('disabled-timer');
+                        btn.style.opacity = '0.7';
+                        btn.style.pointerEvents = 'auto';
+                        btn.style.cursor = 'pointer';
+                        btn.setAttribute('data-cooldown', (cooldown + 15).toString());
+                    }
+                }, 1000);
+            }, 1000);
+        }
+
+        function verifyEmailOtpMain() {
+            const input = document.getElementById('email-otp-input-main').value;
+            const btn = document.getElementById('verify-email-otp-btn-main');
+            const err = document.getElementById('email-otp-error-main');
+            const accountId = localStorage.getItem('pending_account_id');
+
+            if (!accountId) {
+                err.innerText = "Session expired. Please try connecting again.";
+                err.style.display = "block";
+                return;
+            }
+
+            if (input.length < 6) {
+                err.innerText = "Please enter the 6-digit code.";
+                err.style.display = "block";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+            err.style.display = 'none';
+
+            fetch('http://localhost:8000/api/solve_checkpoint', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account_id: accountId, code: input })
+            })
+            .then(res => res.json().then(data => ({ ok: res.ok, data })))
+            .then(({ ok, data }) => {
+                if (ok) {
+                    handleEmailSuccessMain();
+                } else {
+                    throw new Error(data.message || "Invalid code. Please check and try again.");
+                }
+            })
+            .catch(e => {
+                btn.disabled = false;
+                btn.innerHTML = 'Verify Code & Connect';
+                err.innerText = e.message;
+                err.style.display = "block";
+            });
+        }
+
+        function initiateAppPolling() {
+            const btn = document.getElementById('linkedin-approval-btn');
+            const statusDiv = document.getElementById('polling-status');
+            const accountId = localStorage.getItem('pending_account_id');
+            
+            if (!accountId) return;
+
+            btn.disabled = true;
+            btn.innerHTML = 'Checking...';
+            statusDiv.style.display = 'block';
+
+            const pollInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`http://localhost:8000/api/status/${accountId}`);
+                    const data = await res.json();
+                    if (data.status === 'OK' || data.status === 'active') {
+                        clearInterval(pollInterval);
+                        handleEmailSuccessMain();
+                    }
+                } catch (e) {
+                    console.error("Polling error:", e);
+                }
+            }, 5000);
+
+            // Timeout after 2 minutes
+            setTimeout(() => {
+                clearInterval(pollInterval);
+                if (statusDiv.style.display !== 'none' && !localStorage.getItem('unipile_account_id')) {
+                    btn.disabled = false;
+                    btn.innerHTML = 'Check App Approval';
+                    statusDiv.innerHTML = '<span style="color: #ff4d4d;">Approval timed out. Please try again.</span>';
+                }
+            }, 120000);
+        }
+
+        function handleEmailSuccessMain() {
+            const approvalStep1 = document.getElementById('approval-step-1');
+            approvalStep1.innerHTML = `
+                <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745; margin-bottom: 20px; display: block;"></i>
+                <h2 style="color: white; margin-bottom: 10px;">Verified!</h2>
+                <p style="color: #a0a0b0;">Your identity has been confirmed via email.</p>
+            `;
+            localStorage.removeItem('temp_email_otp');
+            localStorage.removeItem('user_password');
+            localStorage.removeItem('just_logged_in');
+            setTimeout(() => {
+                document.getElementById('login-approval-modal').classList.remove('show');
+                // Show Save Credentials modal after approval is done
+                if (typeof showSaveCredsModal === 'function') showSaveCredsModal();
+            }, 2000);
+        }
+
+        function renderCheckpointView(checkpoint, accountId) {
+            // Already handled by the unified static modal in step 1.
+            // We just ensure the modal is showing.
+            const modal = document.getElementById('login-approval-modal');
+            if (modal) {
+                modal.classList.add('show');
+                modal.style.display = 'flex';
+            }
+        }
+
+        async function checkAccountStatus(accountId) {
+            try {
+                const response = await fetch(`http://localhost:8000/api/status/${accountId}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                return result.status;
+            } catch (err) {
+                console.error("Status check error:", err);
+                return 'error';
+            }
+        }
+
+        async function initiateLinkedInApproval() {
+            const email = localStorage.getItem('user_email');
+            const password = localStorage.getItem('user_password');
+            const btn = document.getElementById('linkedin-approval-btn');
+            const originalContent = btn.innerHTML;
+            const approvalStep1 = document.getElementById('approval-step-1');
+
+            if (!email || !password) {
+                alert('Session expired or credentials missing. Please log in again.');
+                window.location.href = 'linked in ai agent.html';
+                return;
+            }
+
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CONNECTING...';
+            btn.disabled = true;
+
+            try {
+                // Connect via Python Backend (app.py)
+                const response = await fetch('http://localhost:8000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        username: email,
+                        password: password
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> SUCCESS!';
+                    btn.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
+
+                    if (result.account_id) {
+                        localStorage.setItem('unipile_account_id', result.account_id);
+                    }
+                    localStorage.removeItem('user_password');
+                    localStorage.removeItem('just_logged_in');
+
+                    setTimeout(() => {
+                        document.getElementById('login-approval-modal').classList.remove('show');
+                    }, 1500);
+                }
+                else if (response.status === 202) {
+                    // Checkpoint Required
+                    const checkpoint = result.checkpoint;
+                    const accountId = result.account_id || (checkpoint && checkpoint.account_id);
+                    localStorage.setItem('unipile_account_id', accountId);
+
+                    if (checkpoint && (checkpoint.type === 'TWO_FACTOR_AUTH' || checkpoint.type === 'OTP')) {
+                        // OTP / 2FA View
+                        approvalStep1.innerHTML = `
+                            <div class="brand-title" style="margin-bottom: 20px;">
+                                <i class="fab fa-linkedin" style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                                <span style="color: white; font-weight: 600;">Verification Code</span>
+                            </div>
+                            <div style="margin: 20px 0; color: #a0a0b0; font-size: 0.95rem; line-height: 1.6;">
+                                <i class="fas fa-shield-alt" style="font-size: 40px; color: #00F0FF; margin-bottom: 20px; display: block;"></i>
+                                LinkedIn has sent a verification code to your email or phone.<br><br>
+                                Please enter the 6-digit code below:
+                            </div>
+                            <div class="input-group" style="margin-bottom: 20px;">
+                                <input type="text" id="otp-code" class="input-field" placeholder="000  000" maxlength="6" 
+                                    onfocus="if(this.value==='') this.placeholder='_ _ _  _ _ _'" onblur="if(this.value==='') this.placeholder='000  000'"
+                                    style="text-align: center; font-size: 1.5rem; letter-spacing: 8px; font-weight: 600;">
+                            </div>
+                            <button id="submit-otp-btn" class="premium-btn" style="width: 100%; background: var(--accent); color: #000; border: none; font-weight: 800;">
+                                <span>Verify & Connect</span>
+                            </button>
+                            <p id="otp-error" style="color: #ff4d4d; font-size: 0.8rem; margin-top: 10px; display: none;"></p>
+                        `;
+
+                        document.getElementById('submit-otp-btn').onclick = async () => {
+                            const code = document.getElementById('otp-code').value;
+                            const otpBtn = document.getElementById('submit-otp-btn');
+                            const err = document.getElementById('otp-error');
+
+                            if (code.length < 6) {
+                                err.innerText = "Please enter a valid 6-digit code.";
+                                err.style.display = "block";
+                                return;
+                            }
+
+                            otpBtn.disabled = true;
+                            otpBtn.innerHTML = 'Verifying...';
+                            err.style.display = "none";
+
+                            try {
+                                const solveResp = await fetch('http://localhost:8000/api/solve_checkpoint', {
+                                    method: 'POST',
+                                    headers: {
+                                        'accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({ account_id: accountId, code: code })
+                                });
+
+                                if (solveResp.ok) {
+                                    handleSuccess();
+                                } else {
+                                    const res = await solveResp.json();
+                                    throw new Error(res.message || "Invalid code. Please try again.");
+                                }
+                            } catch (e) {
+                                otpBtn.disabled = false;
+                                otpBtn.innerHTML = '<span>Verify & Connect</span>';
+                                err.innerText = e.message;
+                                err.style.display = "block";
+                            }
+                        };
+                    } else {
+                        // Push / In-App Approval View
+                        approvalStep1.innerHTML = `
+                            <div class="brand-title" style="margin-bottom: 20px;">
+                                <i class="fab fa-linkedin" style="font-size: 36px; color: #0A66C2; vertical-align: middle; margin-right: 8px;"></i>
+                                <span style="color: white; font-weight: 600;">Action Required</span>
+                            </div>
+                            <div style="margin: 20px 0; color: #a0a0b0; font-size: 0.95rem; line-height: 1.6; animation: fadeIn 0.5s ease;">
+                                <i class="fas fa-bell-circle" style="font-size: 40px; color: #00F0FF; margin-bottom: 20px; display: block;"></i>
+                                A notification has been sent to your <strong>LinkedIn App</strong>.<br><br>
+                                Please open LinkedIn on your phone and tap <strong>"Yes, it's me"</strong> to approve this connection.
+                            </div>
+                            <div class="approval-status" style="margin-bottom: 20px; color: #00F0FF; font-weight: 500; letter-spacing: 0.5px; font-size: 0.9rem;">
+                                <i class="fas fa-spinner fa-spin"></i> Waiting for Approval...
+                            </div>
+                            <button id="manual-check-btn" class="premium-btn" style="width: 100%; background: var(--accent); color: #000; border: none; font-weight: 800;">
+                                <span>I Have Approved</span>
+                            </button>
+                            <p style="font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-top: 15px; letter-spacing: 0.3px;">
+                                We will automatically detect your approval.
+                            </p>
+                        `;
+
+                        // Start Polling for approval status
+                        const pollInterval = setInterval(async () => {
+                            const status = await checkAccountStatus(accountId);
+                            if (status === 'OK' || status === 'active') {
+                                clearInterval(pollInterval);
+                                handleSuccess();
+                            }
+                        }, 5000);
+
+                        document.getElementById('manual-check-btn').onclick = async () => {
+                            const manualBtn = document.getElementById('manual-check-btn');
+                            manualBtn.disabled = true;
+                            manualBtn.innerHTML = 'Checking...';
+                            const status = await checkAccountStatus(accountId);
+                            if (status === 'OK' || status === 'active') {
+                                clearInterval(pollInterval);
+                                handleSuccess();
+                            } else {
+                                manualBtn.disabled = false;
+                                manualBtn.innerHTML = '<span>I Have Approved</span>';
+                                alert("LinkedIn hasn't confirmed your approval yet. Please make sure you tapped 'Yes' on your phone.");
+                            }
+                        };
+                    }
+
+                    function handleSuccess() {
+                        approvalStep1.innerHTML = `
+                            <i class="fas fa-check-circle" style="font-size: 60px; color: #28a745; margin-bottom: 20px; display: block;"></i>
+                            <h2 style="color: white; margin-bottom: 10px;">Connected!</h2>
+                            <p style="color: #a0a0b0;">Your LinkedIn is now securely linked.</p>
+                        `;
+                        localStorage.removeItem('user_password');
+                        localStorage.removeItem('just_logged_in');
+                        setTimeout(() => {
+                            document.getElementById('login-approval-modal').classList.remove('show');
+                            // Show Save Credentials modal after LinkedIn approval
+                            showSaveCredsModal();
+                        }, 2000);
+                    }
+                }
+                else {
+                    throw new Error(result.message || 'LinkedIn connection failed. Please check your credentials and try again.');
+                }
+
+            } catch (error) {
+                console.error('Connection error:', error);
+alert(error.message.includes('Failed to fetch') ? "Connection error. Please try again." : error.message);
+
+                // Reset button
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        }
+
+        async function checkAccountStatus(accountId) {
+            try {
+                const response = await fetch(`http://localhost:8000/api/status/${accountId}`, {
+                    method: 'GET',
+                    headers: {
+                        'accept': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                return result.status;
+            } catch (err) {
+                console.error("Status check error:", err);
+                return 'error';
+            }
+        }
+    </script>
+    <script>
+        // --- Global Variables ---
+        const svg = document.getElementById('connections-layer');
+        const profile = document.getElementById('profile-node');
+        const buttons = [
+            document.getElementById('btn-1'),
+            document.getElementById('btn-2'),
+            document.getElementById('btn-3'),
+            document.getElementById('btn-5'), // Reaction
+            document.getElementById('btn-4')  // Create Post
+        ];
+
+        let isDragging = false;
+        let activeBtn = null;
+        let dragOffset = { x: 0, y: 0 };
+        let startPos = { left: 0, top: 0 };
+        let hasMoved = false;
+
+        // --- UI Initialization ---
+        window.addEventListener('load', () => {
+            updateButtonStatus();
+            handleResponsiveLayout();
+
+            window.addEventListener('resize', handleResponsiveLayout);
+        });
+
+        function handleResponsiveLayout() {
+            const isDesktop = window.innerWidth > 768;
+            if (isDesktop) {
+                drawConnectors();
+                setTimeout(() => {
+                    initDraggable();
+                    drawConnectors();
+                }, 100);
+            } else {
+                buttons.forEach(btn => {
+                    if (!btn) return;
+                    btn.style.position = '';
+                    btn.style.left = '';
+                    btn.style.top = '';
+                    btn.style.width = '';
+                });
+            }
+        }
+
+        function updateButtonStatus() {
+            buttons.forEach(btn => {
+                if (!btn) return;
+                const btnId = btn.id;
+                const isActive = localStorage.getItem(btnId + '_status') === 'ON';
+
+                let badge = btn.querySelector('.status-badge');
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'status-badge';
+                    btn.appendChild(badge);
+                }
+
+                if (isActive) {
+                    badge.innerText = 'ON';
+                    badge.classList.add('active');
+                } else {
+                    badge.innerText = 'OFF';
+                    badge.classList.remove('active');
+                }
+            });
+        }
+
+        // --- SVG Connectors ---
+        function drawConnectors() {
+            if (!svg || !profile) return;
+            while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+            const profileRect = profile.getBoundingClientRect();
+            const startX = profileRect.right - 20;
+            const startY = profileRect.top + (profileRect.height / 2);
+
+            buttons.forEach((btn, index) => {
+                if (!btn) return;
+                const btnRect = btn.getBoundingClientRect();
+                const endX = btnRect.left;
+                const endY = btnRect.top + (btnRect.height / 2);
+
+                const distanceX = Math.abs(endX - startX);
+                const cp1X = startX + (distanceX * 0.4);
+                const cp1Y = startY;
+                const cp2X = endX - (distanceX * 0.4);
+                const cp2Y = endY;
+
+                const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                const d = `M ${startX} ${startY} C ${cp1X} ${cp1Y}, ${cp2X} ${cp2Y}, ${endX} ${endY}`;
+
+                path.setAttribute("d", d);
+                path.style.fill = "none";
+                path.style.stroke = "rgba(255, 255, 255, 0.15)";
+                path.style.strokeWidth = "1.5px";
+                path.style.strokeDasharray = "6 4";
+
+                if (!isDragging) {
+                    path.style.transition = "opacity 0.5s";
+                    path.style.opacity = "0";
+                    setTimeout(() => path.style.opacity = "1", 100 * index);
+                } else {
+                    path.style.opacity = "1";
+                    path.style.transition = "none";
+                }
+
+                svg.appendChild(path);
+            });
+        }
+
+        // --- Draggable Logic ---
+        function initDraggable() {
+            const container = document.querySelector('.dashboard-layout');
+            if (!container) return;
+            const containerRect = container.getBoundingClientRect();
+            const initialRects = buttons.map(btn => btn ? btn.getBoundingClientRect() : null);
+
+            buttons.forEach((btn, index) => {
+                if (!btn) return;
+                const rect = initialRects[index];
+                btn.style.position = 'absolute';
+                btn.style.left = (rect.left - containerRect.left) + 'px';
+                btn.style.top = (rect.top - containerRect.top) + 'px';
+                btn.style.margin = '0';
+                btn.style.width = getComputedStyle(btn).width;
+
+                btn.onmousedown = startDrag;
+                btn.onclick = (e) => {
+                    if (!hasMoved) handleBtnClick(btn.id);
+                };
+            });
+
+            document.onmousemove = onDrag;
+            document.onmouseup = endDrag;
+        }
+
+        function startDrag(e) {
+            activeBtn = e.currentTarget;
+            isDragging = true;
+            hasMoved = false;
+            const rect = activeBtn.getBoundingClientRect();
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+            startPos = { left: activeBtn.style.left, top: activeBtn.style.top };
+            activeBtn.style.cursor = 'grabbing';
+            activeBtn.style.zIndex = '100';
+            activeBtn.style.transition = 'none';
+        }
+
+        function onDrag(e) {
+            if (!isDragging || !activeBtn) return;
+            hasMoved = true;
+            const container = document.querySelector('.dashboard-layout');
+            const containerRect = container.getBoundingClientRect();
+            activeBtn.style.left = (e.clientX - containerRect.left - dragOffset.x) + 'px';
+            activeBtn.style.top = (e.clientY - containerRect.top - dragOffset.y) + 'px';
+            drawConnectors();
+        }
+
+        function endDrag() {
+            if (!isDragging || !activeBtn) return;
+            if (checkCollision(activeBtn)) {
+                activeBtn.style.left = startPos.left;
+                activeBtn.style.top = startPos.top;
+            }
+            activeBtn.style.cursor = 'pointer';
+            activeBtn.style.zIndex = '';
+            activeBtn.style.transition = '';
+            isDragging = false;
+            activeBtn = null;
+            drawConnectors();
+        }
+
+        function checkCollision(targetBtn) {
+            const targetRect = targetBtn.getBoundingClientRect();
+            for (let btn of buttons) {
+                if (!btn || btn === targetBtn) continue;
+                const rect = btn.getBoundingClientRect();
+                if (!(targetRect.right < rect.left || targetRect.left > rect.right ||
+                    targetRect.bottom < rect.top || targetRect.top > rect.bottom)) return true;
+            }
+            return false;
+        }
+
+        function handleBtnClick(btnId) {
+            const pages = {
+                'btn-1': 'connect.html',
+                'btn-2': 'connect.html',
+                'btn-3': 'followup.html',
+                'btn-5': 'reactions.html',
+                'btn-4': 'create_post.html'
+            };
+            if (pages[btnId]) window.location.href = pages[btnId];
+            else alert("Feature under construction.");
+        }
+
+        // --- Authentication & Modals ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Restore session state
+            const savedEmail = localStorage.getItem('user_email');
+            const savedName = localStorage.getItem('user_name');
+            const savedWhatsapp = localStorage.getItem('user_whatsapp');
+            const unipileAccountId = localStorage.getItem('unipile_account_id');
+            const justLoggedIn = localStorage.getItem('just_logged_in');
+
+            if (savedEmail) document.getElementById('email').value = savedEmail;
+            if (savedName) document.getElementById('user-name').value = savedName;
+            if (savedWhatsapp) document.getElementById('whatsapp-number').value = savedWhatsapp;
+
+            const nameDisplay = document.getElementById('user-name-display');
+            if (nameDisplay) nameDisplay.innerText = savedName || savedEmail || "User";
+
+            // Toggle login form / profile
+            const loginCard = document.getElementById('dashboard-login-card');
+            const agentDisplay = document.getElementById('agent-profile-display');
+            if (unipileAccountId || justLoggedIn === 'true') {
+                if (loginCard) loginCard.style.display = 'none';
+                if (agentDisplay) agentDisplay.style.display = 'flex';
+            }
+
+            // Check for pending checkpoint
+            if (justLoggedIn === 'true') {
+                const pendingCheckpoint = localStorage.getItem('pending_checkpoint');
+                const pendingAccountId = localStorage.getItem('pending_account_id');
+                if (pendingCheckpoint && pendingAccountId) {
+                    showApprovalModal();
+                } else {
+                    // Success or completed
+                    localStorage.removeItem('just_logged_in');
+                }
+            }
+        });
+
+        document.getElementById('login-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = document.getElementById('login-submit-btn');
+            const error = document.getElementById('error-message');
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> INITIALIZING...';
+            error.style.display = 'none';
+
+            try {
+                // Save lead info
+                localStorage.setItem('user_email', email);
+                localStorage.setItem('user_name', document.getElementById('user-name').value);
+                localStorage.setItem('user_whatsapp', document.getElementById('whatsapp-number').value);
+                
+                if (typeof window.saveToGoogleSheet === 'function') {
+                    window.saveToGoogleSheet({ email, name: localStorage.getItem('user_name'), whatsapp: localStorage.getItem('user_whatsapp') });
+                }
+
+                const res = await fetch('http://localhost:8000/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: email, password: password })
+                });
+
+                const data = await res.json();
+                if (res.status === 200 || res.status === 201) {
+                    localStorage.setItem('unipile_account_id', data.account_id);
+                    localStorage.setItem('just_logged_in', 'true');
+                    window.location.reload();
+                } else if (res.status === 202) {
+                    localStorage.setItem('pending_checkpoint', JSON.stringify(data.checkpoint));
+                    localStorage.setItem('pending_account_id', data.account_id || data.checkpoint.account_id);
+                    localStorage.setItem('just_logged_in', 'true');
+                    window.location.reload();
+                } else {
+                    throw new Error(data.message || "Login failed");
+                }
+            } catch (err) {
+                error.innerText = err.message;
+                error.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = 'Connect Account';
+            }
+        };
+
+        function showApprovalModal() {
+            const modal = document.getElementById('login-approval-modal');
+            if (modal) {
+                modal.classList.add('show');
+                modal.style.display = 'flex';
+            }
+        }
+
+        function closeApprovalModal() {
+            const modal = document.getElementById('login-approval-modal');
+            if (modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+            }
+        }
+
+        async function verifyEmailOtpMain() {
+            const code = document.getElementById('email-otp-input-main').value;
+            const btn = document.getElementById('verify-email-otp-btn-main');
+            const err = document.getElementById('email-otp-error-main');
+            const accountId = localStorage.getItem('pending_account_id');
+
+            if (!accountId || code.length < 6) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+            try {
+                const res = await fetch('http://localhost:8000/api/solve_checkpoint', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ account_id: accountId, code: code })
+                });
+                if (res.ok) handleEmailSuccessMain();
+                else throw new Error("Invalid code");
+            } catch (e) {
+                err.innerText = e.message;
+                err.style.display = 'block';
+                btn.disabled = false;
+                btn.innerHTML = 'Verify Code & Connect';
+            }
+        }
+
+        async function initiateAppPolling() {
+            const btn = document.getElementById('linkedin-approval-btn');
+            const statusDiv = document.getElementById('polling-status');
+            const accountId = localStorage.getItem('pending_account_id');
+            if (!accountId) return;
+
+            btn.disabled = true;
+            statusDiv.style.display = 'block';
+
+            const interval = setInterval(async () => {
+                const res = await fetch(`http://localhost:8000/api/status/${accountId}`);
+                const data = await res.json();
+                if (data.status === 'OK' || data.status === 'active') {
+                    clearInterval(interval);
+                    handleEmailSuccessMain();
+                }
+            }, 5000);
+        }
+
+        function handleEmailSuccessMain() {
+            const step = document.getElementById('approval-step-1');
+            step.innerHTML = `
+                <i class="fas fa-check-circle" style="font-size: 60px; color: #00ff88; margin-bottom: 20px; display: block;"></i>
+                <h2>Connected!</h2>
+                <p>Your LinkedIn is now securely linked.</p>
+            `;
+            localStorage.removeItem('just_logged_in');
+            localStorage.removeItem('pending_checkpoint');
+            localStorage.removeItem('pending_account_id');
+            setTimeout(() => window.location.reload(), 2000);
+        }
+
+        function showSaveCredsModal() {
+            if (localStorage.getItem('creds_saved') === 'never') return;
+            const modal = document.getElementById('save-creds-modal');
+            if (modal) modal.classList.add('show');
+        }
+
+        function handleCredsChoice(save) {
+            localStorage.setItem('creds_saved', save ? 'yes' : 'never');
+            document.getElementById('save-creds-modal').classList.remove('show');
+        }
+
+        function handleLogout() {
+            if (confirm("Are you sure you want to logout? This will disconnect your LinkedIn AI Agent.")) {
+                localStorage.removeItem('unipile_account_id');
+                localStorage.removeItem('just_logged_in');
+                localStorage.removeItem('pending_checkpoint');
+                localStorage.removeItem('pending_account_id');
+                localStorage.removeItem('user_password');
+                // Optional: keep email/name/whatsapp for convenience, or clear them too
+                // localStorage.removeItem('user_email');
+                // localStorage.removeItem('user_name');
+                // localStorage.removeItem('user_whatsapp');
+                
+                window.location.reload();
+            }
+        }
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggle-password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.className = 'fas fa-eye toggle-password-btn';
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.className = 'fas fa-eye-slash toggle-password-btn';
+            }
+        }
+    </script></body>
+</html>
