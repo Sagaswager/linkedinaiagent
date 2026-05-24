@@ -11,16 +11,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <style>
         :root {
-            --bg: #07101b;
-            --bg-2: #0c1a2c;
-            --panel: rgba(18, 29, 46, 0.72);
-            --panel-border: rgba(255, 255, 255, 0.14);
-            --text: #f4f7fb;
-            --muted: #a9b6c8;
-            --primary: #2ea3ff;
-            --primary-2: #0a84ff;
-            --success: #32d583;
-            --danger: #ff6b6b;
+            --bg: #000000;
+            --surface: #000000;
+            --border: #ffffff;
+            --primary: #ffffff;
+            --primary-hover: #cccccc;
+            --text: #ffffff;
+            --text-secondary: #cccccc;
             --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
             --radius-xl: 28px;
             --radius-lg: 22px;
@@ -41,10 +38,6 @@
             padding: 0;
         }
 
-        html {
-            filter: grayscale(100%) !important;
-        }
-
         html,
         body {
             min-height: 100%;
@@ -53,10 +46,7 @@
         body {
             font-family: 'Inter', sans-serif;
             color: var(--text);
-            background:
-                radial-gradient(circle at left top, rgba(16, 92, 182, 0.24), transparent 30%),
-                radial-gradient(circle at 80% 0%, rgba(46, 163, 255, 0.12), transparent 26%),
-                linear-gradient(180deg, #040b14 0%, #06101b 36%, #07101b 100%);
+            background: #000000;
             padding: 40px 20px 60px;
         }
 
@@ -94,7 +84,7 @@
             padding: 20px 24px;
             border-radius: 28px;
             background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
-            border: 1px solid var(--panel-border);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: var(--text);
             box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), var(--shadow);
             cursor: pointer;
@@ -212,8 +202,8 @@
 
         .tag button {
             border: 0;
-            background: transparent;
-            color: inherit;
+            background: var(--primary);
+            color: #000000;
             cursor: pointer;
         }
 

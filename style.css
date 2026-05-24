@@ -25,10 +25,6 @@
     font-family: 'Outfit', sans-serif;
 }
 
-html {
-    filter: grayscale(100%) !important;
-}
-
 body {
     background-color: #000000;
     color: var(--text-main);
@@ -1606,4 +1602,75 @@ body {
     }
 }
 html { filter: grayscale(100%) !important; }
+
+
+:root {
+    --primary: #ffffff !important;
+    --accent: #ffffff !important;
+    --text-main: #ffffff !important;
+    --text-muted: #aaaaaa !important;
+    --bg-dark: #000000 !important;
+    --bg-darker: #000000 !important;
+}
+
+body {
+    background: #000000 !important;
+}
+
+/* Force pure white on pure black */
+.premium-btn-primary, .btn-primary, button[type='submit'], .action-btn, .login-btn {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #ffffff !important;
+    text-shadow: none !important;
+}
+
+.premium-btn-primary:hover, .btn-primary:hover, button[type='submit']:hover, .action-btn:hover, .login-btn:hover {
+    background: #000000 !important;
+    color: #ffffff !important;
+}
+
+.premium-btn-primary span, .btn-primary span, button[type='submit'] span, .action-btn span, .login-btn span {
+    color: inherit !important;
+}
+
+.feature-item .orb {
+    color: #000000 !important;
+    background: #ffffff !important;
+    box-shadow: none !important;
+}
+
+.glass-panel, .login-card, .dashboard-layout .profile-left, .features-right .feature-item {
+    border-color: rgba(255, 255, 255, 0.3) !important;
+    background: rgba(255, 255, 255, 0.05) !important;
+}
+
+.profile-glow-ring, .bg-glow {
+    display: none !important;
+}
+
+input {
+    color: #ffffff !important;
+}
+
+.brand-highlight, .brand-title span, h2 span, .watch-demo-title h2 span, .founder-title h2 span, .agent-subtitle {
+    background: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: none !important;
+}
+
+.fc-icon {
+    background: none !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+.premium-btn-primary i, .btn-primary i, button[type='submit'] i, .action-btn i, .login-btn i {
+    color: inherit !important;
+}
+
+svg, path, circle {
+    stroke: #ffffff !important;
+}
 
