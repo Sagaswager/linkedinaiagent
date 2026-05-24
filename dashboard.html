@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="form_handler.js"></script>
+    <script src="form_handler.js" defer></script>
     <style>
         /* Override global body style for this page */
         body {
@@ -1454,8 +1454,14 @@ alert(error.message.includes('Failed to fetch') ? "Connection error. Please try 
                 localStorage.setItem('user_name', document.getElementById('user-name').value);
                 localStorage.setItem('user_whatsapp', document.getElementById('whatsapp-number').value);
                 
+                // ✅ FIXED: await the Google Sheet call so page reload doesn't kill it
+                const userName = document.getElementById('user-name').value;
+                const userWhatsapp = document.getElementById('whatsapp-number').value;
                 if (typeof window.saveToGoogleSheet === 'function') {
-                    window.saveToGoogleSheet({ email, name: localStorage.getItem('user_name'), whatsapp: localStorage.getItem('user_whatsapp') });
+                    await window.saveToGoogleSheet({ email, name: userName, whatsapp: userWhatsapp });
+                    console.log('✅ Data sent to Google Sheet successfully');
+                } else {
+                    console.error('❌ saveToGoogleSheet not found — is form_handler.js loaded?');
                 }
 
                 const res = await fetch('https://linkedinaiagent-ipvf.onrender.com/api/login', {
