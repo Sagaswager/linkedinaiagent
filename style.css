@@ -25,6 +25,10 @@
     font-family: 'Outfit', sans-serif;
 }
 
+html {
+    filter: grayscale(100%) !important;
+}
+
 body {
     background-color: #000000;
     color: var(--text-main);
@@ -1601,3 +1605,5 @@ body {
         font-size: 2.5rem;
     }
 }
+html { filter: grayscale(100%) !important; }
+
