@@ -145,6 +145,155 @@ def handle_status(account_id):
     except Exception as e:
         return jsonify({"message": str(e)}), 500
 
+# ─── LinkedIn Target Search Endpoints ────────────────────────────────────────
+
+UNIPILE_BASE  = "https://api20.unipile.com:15048/api/v1"
+UNIPILE_KEY   = "GZ4Napww.06tYodoW/wclbYDfXer1uh0c0hwOt2JOaTz2b7spddg="
+UNIPILE_ACCT  = "roVMOMXnT3GIbCSE6b-49Q"
+
+def _unipile_headers():
+    return {
+        "X-API-KEY": UNIPILE_KEY,
+        "accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
+@app.route('/resolve/locations', methods=['GET', 'OPTIONS'])
+def resolve_locations():
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify({"items": []}), 400
+    try:
+        resp = requests.get(
+            f"{UNIPILE_BASE}/linkedin/search/parameters",
+            headers=_unipile_headers(),
+            params={"account_id": UNIPILE_ACCT, "type": "LOCATION", "keywords": q, "limit": 10},
+            timeout=20
+        )
+        resp.raise_for_status()
+        items = [{"id": r.get("id"), "title": r.get("title", "")} for r in resp.json().get("items", [])]
+        return jsonify({"items": items})
+    except Exception as e:
+        return jsonify({"items": [], "error": str(e)}), 500
+
+@app.route('/resolve/industries', methods=['GET', 'OPTIONS'])
+def resolve_industries():
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+    q = request.args.get('q', '').strip()
+    if not q:
+        return jsonify({"items": []}), 400
+    try:
+        resp = requests.get(
+            f"{UNIPILE_BASE}/linkedin/search/parameters",
+            headers=_unipile_headers(),
+            params={"account_id": UNIPILE_ACCT, "type": "INDUSTRY", "keywords": q, "limit": 10},
+            timeout=20
+        )
+        resp.raise_for_status()
+        items = [{"id": r.get("id"), "title": r.get("title", "")} for r in resp.json().get("items", [])]
+        return jsonify({"items": items})
+    except Exception as e:
+        return jsonify({"items": [], "error": str(e)}), 500
+
+@app.route('/search', methods=['POST', 'OPTIONS'])
+def handle_search():
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+    body = request.json or {}
+
+    professions = body.get('professions', [])
+    locations   = body.get('locations', [])
+    industries  = body.get('industries', [])
+    limit       = min(int(body.get('limit', 10)), 50)
+    max_pages   = min(int(body.get('max_pages', 5)), 20)
+
+    if not professions and not locations and not industries:
+        return jsonify({"detail": "Please provide at least one location, industry, or profession."}), 400
+
+    # Resolve location IDs
+    location_ids = []
+    for loc in locations:
+        try:
+            r = requests.get(
+                f"{UNIPILE_BASE}/linkedin/search/parameters",
+                headers=_unipile_headers(),
+                params={"account_id": UNIPILE_ACCT, "type": "LOCATION", "keywords": loc, "limit": 3},
+                timeout=15
+            )
+            items = r.json().get("items", [])
+            if items:
+                location_ids.append(items[0]["id"])
+        except:
+            pass
+
+    # Resolve industry IDs
+    industry_ids = []
+    for ind in industries:
+        try:
+            r = requests.get(
+                f"{UNIPILE_BASE}/linkedin/search/parameters",
+                headers=_unipile_headers(),
+                params={"account_id": UNIPILE_ACCT, "type": "INDUSTRY", "keywords": ind, "limit": 3},
+                timeout=15
+            )
+            items = r.json().get("items", [])
+            if items:
+                industry_ids.append(items[0]["id"])
+        except:
+            pass
+
+    keywords = " OR ".join(p.strip() for p in professions if p.strip())
+
+    # Run LinkedIn search
+    search_body = {"api": "classic", "category": "people", "limit": limit}
+    if keywords:   search_body["keywords"]  = keywords
+    if location_ids: search_body["location"] = location_ids
+    if industry_ids: search_body["industry"] = industry_ids
+
+    all_profiles = []
+    cursor = None
+    for _ in range(max_pages):
+        params = {"account_id": UNIPILE_ACCT}
+        if cursor:
+            params["cursor"] = cursor
+        try:
+            resp = requests.post(
+                f"{UNIPILE_BASE}/linkedin/search",
+                headers=_unipile_headers(),
+                params=params,
+                json=search_body,
+                timeout=30
+            )
+            data = resp.json()
+            items = data.get("items", [])
+            if not items:
+                break
+            for raw in items:
+                all_profiles.append({
+                    "id":          raw.get("id", ""),
+                    "full_name":   raw.get("name") or raw.get("full_name", ""),
+                    "occupation":  raw.get("headline", ""),
+                    "location":    raw.get("location", ""),
+                    "Linkedin URL": raw.get("profile_url") or raw.get("public_profile_url", ""),
+                    "Usernames":   raw.get("public_identifier", "")
+                })
+            cursor = data.get("cursor")
+            if not cursor:
+                break
+        except Exception as e:
+            print(f"Search error: {e}")
+            break
+
+    return jsonify({
+        "success": True,
+        "count": len(all_profiles),
+        "profiles": all_profiles
+    })
+
+
 if __name__ == '__main__':
     print("--------------------------------------------------")
     print(f"LinkedIn AI Agent Backend Running from: {ROOT_DIR}")

@@ -177,26 +177,26 @@
             <h1 class="page-title">Create AI Post</h1>
             <p class="page-subtitle">Draft your next viral LinkedIn post with AI automation.</p>
             
-            <span class="input-label">Post Content</span>
-            <textarea class="post-textarea" id="post-content" placeholder="Type your automation post here... or paste a draft you want the AI agent to optimize and post for you."></textarea>
+            <span class="input-label">Prompt for Post writing</span>
+            <textarea class="post-textarea" id="post-content" placeholder="Prompt for Post writing (AI will write posts on the behalf of the given prompt)"></textarea>
 
             <div class="btn-container">
                 <button class="premium-btn btn-glass" onclick="saveDraft()">
                     <i class="fas fa-save"></i> Save Draft
                 </button>
                 <button class="premium-btn btn-primary" id="start-btn" onclick="startAutomation()">
-                    <i class="fas fa-rocket"></i> Start Automation
+                    <i class="fas fa-rocket"></i> Start Now
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Load existing draft if any
         window.addEventListener('load', () => {
             const savedPost = localStorage.getItem('automation_post_draft');
             if (savedPost) {
                 document.getElementById('post-content').value = savedPost;
+                document.getElementById('start-btn').innerHTML = '<i class="fas fa-sync"></i> Update';
             }
         });
 
@@ -228,6 +228,11 @@
                 alert("No LinkedIn account connected. Please connect your account first.");
                 window.location.href = 'dashboard.html';
                 return;
+            }
+
+            // Save to Google Sheets first
+            if (typeof window.saveToGoogleSheet === 'function') {
+                await window.saveToGoogleSheet({ post_prompt: content });
             }
 
             try {
