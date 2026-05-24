@@ -8,7 +8,7 @@
  */
 
 // ✅ PASTE YOUR APPS SCRIPT WEB APP URL HERE
-const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbysUaGaPK2Jah00UELMm5dPAuy8eHqIjt_zJiKRj8EBytladLtGRswHJ5qHfwMzDgjL0g/exec';
+const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyOwQ23j-0DTuWdsVD6LoYo9pu6xlRt40_Gi2Lr1GRzUPwUZ3pSMIN-JgsSdFVQ1mEe/exec';
 
 /**
  * Saves user data to Google Sheet when "Connect Account" is clicked.
