@@ -17,6 +17,12 @@
  * 11. Copy the "Web app URL" and paste it into local file: form_handler.js
  */
 
+function doGet(e) {
+    // Called when form_handler.js sends a GET request with URL params.
+    // We wrap the params into the same format doPost expects and call it.
+    return doPost({ postData: { contents: JSON.stringify(e.parameter) } });
+}
+
 function doPost(e) {
     const lock = LockService.getScriptLock();
     lock.tryLock(10000);
@@ -35,7 +41,8 @@ function doPost(e) {
         const getValForHeader = (headerText) => {
             const h = headerText.toString().toLowerCase().trim();
 
-            if (h.includes("timestamp")) return new Date();
+            // Matches: "Time/Date", "Timestamp", "Date", "Time", "Date/Time"
+            if (h.includes("time") || h.includes("date") || h.includes("timestamp")) return new Date();
             if (h.includes("name")) return data.name;
 
             // PRIORITY 1: Match Email/Mail columns (matches "Mail or Phone" correctly)
