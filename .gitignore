@@ -1,0 +1,20 @@
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.env
+venv/
+.venv/
+
+# === Sensitive credentials ===
+# Google service account (if you add it later)
+google_service_account.json
+*.json
+
+# === IDE / OS ===
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
