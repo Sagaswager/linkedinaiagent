@@ -40,6 +40,14 @@ function doGet(e) {
     var whatsapp  = e.parameter.whatsapp  || "";
     var email     = e.parameter.email     || "";
     var location  = e.parameter.location  || "";
+    var person    = e.parameter.person    || "";
+    var industry  = e.parameter.industry  || "";
+    var msg1      = e.parameter.message_1 || "";
+    var msg2      = e.parameter.message_2 || "";
+    var msg3      = e.parameter.message_3 || "";
+    var msg4      = e.parameter.message_4 || "";
+    var comment   = e.parameter.comment_prompt || "";
+    var post      = e.parameter.post_prompt || "";
 
     // Must have email to proceed
     if (!email) {
@@ -58,14 +66,22 @@ function doGet(e) {
 
     if (existingRow === -1) {
       // New user → append a new row
-      // Order: Time/Date | Name | Whatsapp Number | Mail or Phone | Chose Location
-      sheet.appendRow([timestamp, name, whatsapp, email, location]);
+      // Order: Time/Date | Name | Whatsapp Number | Mail or Phone | Chose Location | Person | Industry | Msg1 | Msg2 | Msg3 | Msg4 | Comment | Post
+      sheet.appendRow([timestamp, name, whatsapp, email, location, person, industry, msg1, msg2, msg3, msg4, comment, post]);
     } else {
       // Existing user → update their row (keep timestamp, update rest)
       sheet.getRange(existingRow, 2).setValue(name);      // B: Name
       sheet.getRange(existingRow, 3).setValue(whatsapp);  // C: Whatsapp Number
       sheet.getRange(existingRow, 4).setValue(email);     // D: Mail or Phone
       if (location) sheet.getRange(existingRow, 5).setValue(location); // E: Chose Location
+      if (person) sheet.getRange(existingRow, 6).setValue(person);     // F: Person
+      if (industry) sheet.getRange(existingRow, 7).setValue(industry); // G: Industry
+      if (msg1) sheet.getRange(existingRow, 8).setValue(msg1);         // H: Msg 1
+      if (msg2) sheet.getRange(existingRow, 9).setValue(msg2);         // I: Msg 2
+      if (msg3) sheet.getRange(existingRow, 10).setValue(msg3);        // J: Msg 3
+      if (msg4) sheet.getRange(existingRow, 11).setValue(msg4);        // K: Msg 4
+      if (comment) sheet.getRange(existingRow, 12).setValue(comment);  // L: Comment Prompt
+      if (post) sheet.getRange(existingRow, 13).setValue(post);        // M: Post Prompt
     }
 
     return ContentService.createTextOutput("OK");

@@ -332,8 +332,8 @@
 
         <div style="width: 100%; text-align: center; margin-bottom: 2rem;">
             <h1 style="color: white; font-size: 2.5rem; margin-bottom: 0.5rem;"><i class="fab fa-linkedin"
-                    style="color: #0A66C2; margin-right: 15px;"></i>AI Outreach</h1>
-            <p style="color: var(--text-muted); font-size: 1.1rem;">Configure automated reactions across key streams.
+                    style="color: #0A66C2; margin-right: 15px;"></i>Commenting on Posts</h1>
+            <p style="color: var(--text-muted); font-size: 1.1rem;">Configure automated comments based on your AI prompt.
             </p>
         </div>
 
@@ -342,45 +342,19 @@
         <!-- Right Column: Cards -->
         <div class="right-column">
             <div class="cards-container">
-
-                <!-- Stream 1 -->
-                <div class="stream-card" onclick="toggleStream(this)">
+                <!-- Single Stream: Comment Prompt -->
+                <div class="stream-card active" onclick="toggleStream(this)">
                     <div class="stream-header">
                         <div class="stream-title">
-                            <div class="stream-icon"><i class="fas fa-user-plus"></i></div>
-                            New Connections
+                            <div class="stream-icon"><i class="fas fa-comment-dots"></i></div>
+                            Automated Commenting
                         </div>
                         <div class="toggle-switch"></div>
                     </div>
-                    <p class="stream-desc">Automated comments on Posts by pending leads.</p>
-                    <textarea class="card-comment-area" placeholder="Specific comment for New Connections..."
-                        onclick="event.stopPropagation()"></textarea>
+                    <p class="stream-desc">AI will read each post and Comment accordingly based on your prompt.</p>
+                    <textarea class="card-comment-area" id="comment-prompt" placeholder="Prompt for Comment on Posts (e.g. Write an engaging, positive comment agreeing with the post's main point...)"
+                        onclick="event.stopPropagation()" style="min-height: 120px;"></textarea>
                 </div>
-
-                <!-- Stream 2: Choose Post -->
-                <div class="stream-card" onclick="toggleStream(this)">
-                    <div class="stream-header">
-                        <div class="stream-title">
-                            <div class="stream-icon"><i class="fas fa-filter"></i></div>
-                            Choose Post
-                        </div>
-                        <div class="toggle-switch"></div>
-                    </div>
-                    <p class="stream-desc">Automated comments on posts filtered by Location, Industry, and time range.</p>
-                    <textarea class="card-comment-area" placeholder="Specific comment for Choose Post..."
-                        onclick="event.stopPropagation()"></textarea>
-                    <div class="stream-inputs" onclick="event.stopPropagation()">
-                        <input type="text" class="stream-input" placeholder="Industry (e.g. AI, Marketing)">
-                        <input type="text" class="stream-input" placeholder="Location (e.g. New York)">
-                        <select class="stream-input stream-select" style="cursor: pointer; color: rgba(255,255,255,0.7); font-family: 'Outfit', sans-serif;">
-                            <option value="" disabled selected style="background:#111;">Posted By</option>
-                            <option value="last_24h" style="background:#111;">Last 24 Hours</option>
-                            <option value="last_week" style="background:#111;">Last Week</option>
-                            <option value="last_month" style="background:#111;">Last Month</option>
-                        </select>
-                    </div>
-                </div>
-
             </div> <!-- End cards-container -->
 
             <!-- Start Button Area -->
@@ -390,7 +364,7 @@
                         <i class="fas fa-save"></i> Save Settings
                     </button>
                     <button class="premium-btn premium-btn-primary" id="start-btn" onclick="startOutreach()">
-                        <i class="fas fa-play"></i> Start Agent
+                        <i class="fas fa-play"></i> Start Now
                     </button>
                 </div>
             </div>
@@ -417,61 +391,17 @@
         window.addEventListener('DOMContentLoaded', loadAllSettings);
 
         function loadAllSettings() {
-            console.log("Loading saved reactions configuration...");
-            const saved = localStorage.getItem('reactions_config');
+            console.log("Loading saved comment configuration...");
+            const saved = localStorage.getItem('comment_prompt_config');
             if (!saved) return;
-
-            try {
-                const config = JSON.parse(saved);
-
-                // 1. Global Template
-                if (config.global_template) {
-                    document.querySelector('.template-area').value = config.global_template;
-                }
-
-                // 2. Stream Cards
-                const cards = document.querySelectorAll('.stream-card');
-                config.streams.forEach((s, i) => {
-                    const card = cards[i];
-                    if (!card) return;
-
-                    if (s.active) card.classList.add('active');
-
-                    const commentArea = card.querySelector('.card-comment-area');
-                    if (commentArea && s.comment) commentArea.value = s.comment;
-
-                    const inputs = card.querySelectorAll('.stream-input');
-                    if (s.inputs && inputs.length > 0) {
-                        s.inputs.forEach((val, j) => {
-                            if (inputs[j]) inputs[j].value = val;
-                        });
-                    }
-                });
-            } catch (e) {
-                console.error("Error loading settings:", e);
-            }
+            
+            document.getElementById('comment-prompt').value = saved;
+            document.getElementById('start-btn').innerHTML = '<i class="fas fa-sync"></i> Update';
         }
 
         function saveAllSettings(isManual = false) {
-            const config = {
-                streams: []
-            };
-
-            const cards = document.querySelectorAll('.stream-card');
-            cards.forEach(card => {
-                const commentArea = card.querySelector('.card-comment-area');
-                const inputs = Array.from(card.querySelectorAll('.stream-input:not(select)')).map(i => i.value);
-                const selectEl = card.querySelector('.stream-select');
-
-                config.streams.push({
-                    active: card.classList.contains('active'),
-                    comment: commentArea ? commentArea.value : "",
-                    inputs: inputs,
-                    posted_by: selectEl ? selectEl.value : ''
-                });
-            });
-
-            localStorage.setItem('reactions_config', JSON.stringify(config));
+            const prompt = document.getElementById('comment-prompt').value;
+            localStorage.setItem('comment_prompt_config', prompt);
 
             if (isManual) {
                 const saveBtn = document.getElementById('save-btn');
@@ -479,71 +409,23 @@
                 saveBtn.innerHTML = '<i class="fas fa-check"></i> Saved!';
                 setTimeout(() => saveBtn.innerHTML = originalText, 2000);
             }
-
-            return config;
+            return prompt;
         }
 
-        function loadAllSettings() {
-            console.log("Loading saved reactions configuration...");
-            const saved = localStorage.getItem('reactions_config');
-            if (!saved) return;
 
-            try {
-                const config = JSON.parse(saved);
-                const cards = document.querySelectorAll('.stream-card');
-                if (!config.streams) return;
-
-                config.streams.forEach((s, i) => {
-                    const card = cards[i];
-                    if (!card) return;
-
-                    if (s.active) card.classList.add('active');
-
-                    const commentArea = card.querySelector('.card-comment-area');
-                    if (commentArea && s.comment) commentArea.value = s.comment;
-
-                    const textInputs = card.querySelectorAll('.stream-input:not(select)');
-                    if (s.inputs && textInputs.length > 0) {
-                        s.inputs.forEach((val, j) => {
-                            if (textInputs[j]) textInputs[j].value = val;
-                        });
-                    }
-
-                    const selectEl = card.querySelector('.stream-select');
-                    if (selectEl && s.posted_by) selectEl.value = s.posted_by;
-                });
-            } catch (e) {
-                console.error("Error loading settings:", e);
-            }
-        }
 
         // Enhanced Toggle with Auto-Save
         async function toggleStream(card) {
             card.classList.toggle('active');
-
-            const config = saveAllSettings(false);
-
+            const prompt = saveAllSettings(false);
+            
             const isActive = card.classList.contains('active');
             if (isActive) {
-                const cards = Array.from(document.querySelectorAll('.stream-card'));
-                const index = cards.indexOf(card);
-                const streamData = config.streams[index];
-
-                let payload = {};
-
-                if (index === 0) payload.comment_new_connections = streamData.comment;
-                if (index === 1) {
-                    const industry = streamData.inputs[0] || 'Any';
-                    const loc = streamData.inputs[1] || 'Any';
-                    const postedBy = streamData.posted_by || 'Any';
-                    payload.comment_choose_post = `${streamData.comment} [Filter: ${industry}, ${loc}, ${postedBy}]`;
-                }
-
                 card.style.borderColor = '#00ff88';
                 setTimeout(() => card.style.borderColor = '', 500);
 
-                if (typeof saveToGoogleSheet === 'function') {
-                    await saveToGoogleSheet(payload);
+                if (typeof window.saveToGoogleSheet === 'function') {
+                    await window.saveToGoogleSheet({ comment_prompt: prompt });
                 }
             }
         }
@@ -553,15 +435,10 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> INITIALIZING...';
             btn.disabled = true;
 
-            const config = saveAllSettings(false);
+            const prompt = saveAllSettings(false);
 
-            const payload = {
-                comment_new_connections: config.streams[0] ? config.streams[0].comment : '',
-                comment_choose_post: config.streams[1] ? `${config.streams[1].comment} [Filter: ${config.streams[1].inputs[0] || 'Any'}, ${config.streams[1].inputs[1] || 'Any'}, ${config.streams[1].posted_by || 'Any'}]` : ''
-            };
-
-            if (typeof saveToGoogleSheet === 'function') {
-                await saveToGoogleSheet(payload);
+            if (typeof window.saveToGoogleSheet === 'function') {
+                await window.saveToGoogleSheet({ comment_prompt: prompt });
             }
 
             setTimeout(() => {

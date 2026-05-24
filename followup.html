@@ -307,7 +307,7 @@
                         <i class="fas fa-save"></i> Save Settings
                     </button>
                     <button class="premium-btn premium-btn-primary" id="start-btn" onclick="startFollowupCampaign()">
-                        <i class="fas fa-play"></i> Start Sequence
+                        <i class="fas fa-play"></i> Start Now
                     </button>
                 </div>
 
@@ -346,6 +346,10 @@
             if (msg2) document.getElementById('msg-2').value = msg2;
             if (msg3) document.getElementById('msg-3').value = msg3;
             if (msg4) document.getElementById('msg-4').value = msg4;
+
+            if (msg1 || msg2 || msg3 || msg4) {
+                document.getElementById('start-btn').innerHTML = '<i class="fas fa-sync"></i> Update';
+            }
 
             checkInputs();
         });
