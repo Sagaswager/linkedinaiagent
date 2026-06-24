@@ -1,0 +1,1826 @@
+:root {
+    --bg-dark: #090919;
+    --bg-darker: #050510;
+    --primary: #6C63FF;
+    /* Violet */
+    --accent: #00F0FF;
+    /* Cyan */
+    --text-main: #ffffff;
+    --text-muted: #a0a0b0;
+    --glass-surface: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --btn-hover: rgba(108, 99, 255, 0.2);
+
+    /* --- Fluid Typography & Spacing --- */
+    --fs-base: clamp(0.9rem, 1vw, 1.1rem);
+    --fs-h1: clamp(1.8rem, 4vw, 2.5rem);
+    --fs-h2: clamp(1.4rem, 3vw, 1.8rem);
+    --container-padding: clamp(1rem, 5vw, 3rem);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Outfit', sans-serif;
+}
+
+body {
+    background-color: #000000;
+    color: var(--text-main);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow-x: hidden;
+    overflow-y: auto;
+    position: relative;
+    /* Deep space gradient matching the image */
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+}
+
+/* Starry Background */
+.stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.stars {
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow:
+        1744px 122px #FFF, 134px 1321px #FFF, 92px 859px #FFF, 1655px 536px #FFF, 867px 1195px #FFF,
+        286px 1215px #FFF, 966px 878px #FFF, 1656px 423px #FFF, 1749px 920px #FFF, 53px 439px #FFF,
+        1224px 213px #FFF, 1032px 556px #FFF, 1573px 282px #FFF, 678px 89px #FFF, 345px 987px #FFF,
+        145px 345px #FFF, 1876px 200px #FFF, 890px 123px #FFF, 1234px 876px #FFF, 567px 890px #FFF,
+        112px 900px #FFF, 456px 345px #FFF, 999px 123px #FFF, 321px 654px #FFF, 876px 432px #FFF,
+        150px 750px #FFF, 1800px 900px #FFF, 600px 300px #FFF, 1300px 600px #FFF, 950px 1100px #FFF,
+        1700px 100px #FFF, 50px 500px #FFF, 1400px 800px #FFF, 700px 1200px #FFF, 200px 1000px #FFF;
+    animation: animStar 150s linear infinite;
+}
+
+.stars:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    box-shadow:
+        1744px 122px #FFF, 134px 1321px #FFF, 92px 859px #FFF, 1655px 536px #FFF, 867px 1195px #FFF,
+        286px 1215px #FFF, 966px 878px #FFF, 1656px 423px #FFF, 1749px 920px #FFF, 53px 439px #FFF,
+        1224px 213px #FFF, 1032px 556px #FFF, 1573px 282px #FFF, 678px 89px #FFF, 345px 987px #FFF,
+        145px 345px #FFF, 1876px 200px #FFF, 890px 123px #FFF, 1234px 876px #FFF, 567px 890px #FFF,
+        112px 900px #FFF, 456px 345px #FFF, 999px 123px #FFF, 321px 654px #FFF, 876px 432px #FFF,
+        150px 750px #FFF, 1800px 900px #FFF, 600px 300px #FFF, 1300px 600px #FFF, 950px 1100px #FFF,
+        1700px 100px #FFF, 50px 500px #FFF, 1400px 800px #FFF, 700px 1200px #FFF, 200px 1000px #FFF;
+}
+
+.stars2 {
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow:
+        500px 900px #FFF, 800px 300px #FFF, 1200px 100px #FFF, 1500px 600px #FFF, 200px 400px #FFF,
+        1000px 800px #FFF, 1600px 200px #FFF, 400px 1100px #FFF, 700px 500px #FFF, 1300px 1200px #FFF,
+        100px 700px #FFF, 1900px 100px #FFF, 1100px 400px #FFF, 300px 1000px #FFF, 1400px 300px #FFF;
+    animation: animStar 100s linear infinite;
+}
+
+.stars2:after {
+    content: " ";
+    position: absolute;
+    top: 2000px;
+    width: 2px;
+    height: 2px;
+    background: transparent;
+    box-shadow:
+        500px 900px #FFF, 800px 300px #FFF, 1200px 100px #FFF, 1500px 600px #FFF, 200px 400px #FFF,
+        1000px 800px #FFF, 1600px 200px #FFF, 400px 1100px #FFF, 700px 500px #FFF, 1300px 1200px #FFF,
+        100px 700px #FFF, 1900px 100px #FFF, 1100px 400px #FFF, 300px 1000px #FFF, 1400px 300px #FFF;
+}
+
+/* Bottom Glow from image */
+.bottom-glow {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60vh;
+    background: radial-gradient(ellipse at bottom, rgba(30, 80, 255, 0.4) 0%, transparent 70%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Accent Glows (kept but modified) */
+.bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.3;
+    z-index: -1;
+}
+
+@keyframes animStar {
+    from {
+        transform: translateY(0px);
+    }
+
+    to {
+        transform: translateY(-2000px);
+    }
+}
+
+/* Background Ambient Glows */
+.bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    z-index: -1;
+}
+
+.bg-glow-1 {
+    width: 400px;
+    height: 400px;
+    background: var(--primary);
+    top: -100px;
+    left: -100px;
+}
+
+.bg-glow-2 {
+    width: 300px;
+    height: 300px;
+    background: var(--accent);
+    bottom: -50px;
+    right: -50px;
+}
+
+/* Main Container Glass Panel */
+.main-container {
+    width: 90%;
+    max-width: 1400px;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.glass-panel {
+    display: grid;
+    grid-template-columns: 35% 65%;
+    width: 100%;
+    height: 100%;
+    background: var(--glass-surface);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* --- Profile Section --- */
+.profile-section {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid var(--glass-border);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.0) 100%);
+    z-index: 2;
+}
+
+.profile-image-container {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, var(--accent), var(--primary));
+    box-shadow: 0 0 25px rgba(108, 99, 255, 0.4);
+    z-index: 2;
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--bg-darker);
+    background-color: #000;
+}
+
+.status-indicator {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    width: 22px;
+    height: 22px;
+    background-color: #00ff88;
+    border: 3px solid var(--bg-darker);
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ff88;
+}
+
+.profile-glow-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 260px;
+    height: 260px;
+    border: 1px solid rgba(108, 99, 255, 0.1);
+    border-radius: 50%;
+    animation: spin 10s linear infinite;
+    z-index: 1;
+}
+
+.profile-glow-ring::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.text-content {
+    margin-top: 2rem;
+    text-align: center;
+    z-index: 2;
+}
+
+.agent-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: 1px;
+}
+
+.agent-subtitle {
+    font-size: 1.2rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-top: 0.5rem;
+    font-weight: 600;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+}
+
+
+/* --- Actions Section --- */
+.actions-container {
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.action-row {
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    animation: slideInRight 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+.action-row:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.action-row:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.action-row:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.action-row:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.action-row:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.arrow-wrapper {
+    width: 80px;
+    height: 2px;
+    margin-right: 20px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.arrow-line {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent));
+}
+
+.arrow-head {
+    width: 6px;
+    height: 6px;
+    border-top: 1px solid var(--accent);
+    border-right: 1px solid var(--accent);
+    transform: rotate(45deg);
+    margin-left: -4px;
+}
+
+.action-btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    padding: 1.2rem 1.5rem;
+    border: none;
+    outline: none;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.0) 100%);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    font-size: 1.1rem;
+    border-radius: 0 12px 12px 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background: var(--primary);
+    transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    z-index: 0;
+}
+
+.action-btn:hover::before {
+    width: 100%;
+    opacity: 0.15;
+}
+
+.action-btn:hover {
+    transform: translateX(10px);
+    border-left-color: var(--primary);
+}
+
+.action-btn .icon {
+    width: 40px;
+    display: flex;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+    margin-right: 10px;
+    z-index: 1;
+    transition: color 0.3s;
+}
+
+.action-btn:hover .icon {
+    color: var(--accent);
+}
+
+.action-btn .text {
+    z-index: 1;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+}
+
+
+/* --- Chat Support --- */
+.chat-support-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.chat-avatar-wrapper {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    padding: 3px;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.chat-avatar-wrapper:hover {
+    transform: scale(1.1);
+    border-color: var(--accent);
+}
+
+.chat-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.online-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    background: #00ff88;
+    border-radius: 50%;
+    border: 2px solid var(--bg-dark);
+}
+
+.ping {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: #00ff88;
+    opacity: 0.6;
+    animation: ping 1.5s infinite;
+}
+
+.chat-tooltip {
+    position: absolute;
+    top: -40px;
+    right: 50%;
+    transform: translateX(50%);
+    background: var(--primary);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+
+.chat-support-container:hover .chat-tooltip {
+    opacity: 1;
+    transform: translateX(50%) translateY(-5px);
+}
+
+.chat-name {
+    margin-top: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+
+/* --- Keyframes --- */
+@keyframes spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes ping {
+    0% {
+        width: 100%;
+        height: 100%;
+        opacity: 0.6;
+    }
+
+    100% {
+        width: 300%;
+        height: 300%;
+        opacity: 0;
+    }
+}
+
+/* Old Media Query removed - consolidated at end of file */
+
+/* --- New Dashboard Layout --- */
+.dashboard-layout {
+    display: flex;
+    width: 100%;
+    max-width: 1600px;
+    height: 100vh;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    position: relative;
+    z-index: 10;
+}
+
+/* Left Profile (Medium Size) */
+.profile-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-left: 50px;
+    /* Slight offset from edge */
+    position: relative;
+    /* Fixes glow ring positioning */
+}
+
+.profile-left .profile-image-container {
+    width: 140px;
+    /* Reduced from 180px */
+    height: 140px;
+    position: relative;
+    z-index: 2;
+}
+
+.profile-left .profile-glow-ring {
+    width: 200px;
+    height: 200px;
+    /* Centered in the relatively positioned parent by default due to absolute + transform */
+    z-index: 1;
+}
+
+.profile-left .agent-title {
+    font-size: 0.85rem;
+    /* Reduced to be smaller than 'AI Agent' */
+    margin-top: 1.5rem;
+    position: relative;
+    z-index: 2;
+    /* Ensures text is above glow */
+    font-weight: 400;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+}
+
+.profile-left .agent-subtitle {
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 2;
+    font-weight: 600;
+}
+
+/* Right Features Container */
+.features-right {
+    display: flex;
+    flex-direction: column;
+    /* Vertical alignment */
+    align-items: flex-end;
+    /* Align to the right side */
+    gap: 1.5rem;
+    margin-right: 180px;
+    /* Moved further left */
+    height: auto;
+    justify-content: center;
+}
+
+.feature-item {
+    display: flex;
+    flex-direction: row;
+    /* Horizontal icon + text */
+    align-items: center;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+
+    /* Button Look */
+    background: rgba(255, 255, 255, 0.05);
+    /* Slightly more visible base */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 60px;
+    /* Pill shape */
+    padding: 10px 30px 10px 10px;
+    /* Padding for text on right */
+    backdrop-filter: blur(12px);
+    width: 340px;
+    /* Increased width for longer text */
+}
+
+/* Status Indicator */
+.status-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.4);
+    margin-left: auto;
+    /* Push to far right */
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.status-badge.active {
+    background: rgba(0, 255, 136, 0.15);
+    color: #00ff88;
+    border-color: #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+.feature-item:hover {
+    transform: translateX(-15px) scale(1.02);
+    /* enhanced movement and scale */
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(108, 99, 255, 0.4);
+    /* Stronger glow */
+}
+
+.orb {
+    width: 45px;
+    /* Smaller icon size for button */
+    height: 45px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.6));
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-right: 15px;
+    /* Spacing between icon and text */
+}
+
+/* Maintain distinct glow colors for specific items if desired, or unify */
+.feature-item:nth-child(1) .orb {
+    box-shadow: 0 0 10px rgba(0, 119, 181, 0.4);
+}
+
+.feature-item:nth-child(3) .orb {
+    box-shadow: 0 0 10px rgba(108, 99, 255, 0.4);
+}
+
+.feature-item:nth-child(5) .orb {
+    box-shadow: 0 0 10px rgba(255, 105, 180, 0.4);
+}
+
+.orb.large {
+    /* Reset large orb to normal size for consistency in list, or slightly larger */
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+}
+
+.vertical-line {
+    display: none;
+    /* Hide vertical lines */
+}
+
+.feature-label {
+    margin-top: 0;
+    font-size: 1.1rem;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-align: left;
+    flex-grow: 1;
+}
+
+/* Remove Staggered Vertical Positions */
+.pos-1,
+.pos-2,
+.pos-3,
+.pos-4,
+.pos-5 {
+    transform: none;
+}
+
+/* Specific colored glows on hover can be re-added here if needed, 
+   but general hover is already defined. We'll leave them clean for now. */
+
+
+
+/* --- Login View Styles --- */
+.login-view {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.login-view.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+}
+
+.login-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    padding: 3rem 2.5rem;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.login-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+}
+
+.brand-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.brand-highlight {
+    color: #0a66c2;
+    /* LinkedIn Blue fallback/reference */
+    background: linear-gradient(135deg, #0077b5, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.login-subtitle {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    /* Reduced margin */
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, #00C6FF, #0072FF);
+    /* Vibrant Blue/Cyan Gradient */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(0, 198, 255, 0.3);
+    position: relative;
+    display: inline-block;
+}
+
+.login-subtitle::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.input-group {
+    margin-bottom: 1.2rem;
+    position: relative;
+}
+
+.input-field {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: white;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.input-field::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.input-field:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.15);
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 1.2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    z-index: 10;
+    transition: color 0.3s ease;
+}
+
+.toggle-password-btn:hover {
+    color: var(--accent);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 1rem;
+    margin-top: 1rem;
+    background: linear-gradient(135deg, var(--primary), #564ad4);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+}
+
+.login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 99, 255, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.error-message {
+    color: #ff4d4d;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    min-height: 1.2rem;
+    display: none;
+    animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* Dashboard Hidden State */
+.main-container.hidden {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    display: flex;
+    /* Keep display flex so it takes space? No, hide it */
+    visibility: hidden;
+    position: absolute;
+}
+
+
+/* --- Connect Page Styles --- */
+.connect-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+    padding: 2rem;
+}
+
+.search-buttons-row {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.search-group {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Styled like feature buttons but horizontal flow */
+/* Revised Select Button to match Feature Item */
+.select-btn {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    /* justify-content: space-between; Removed to rely on flex-grow */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 60px;
+    padding: 10px 30px 10px 10px;
+    /* Match feature-item padding */
+    backdrop-filter: blur(12px);
+    width: 340px;
+    /* Match feature-item width */
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    color: white;
+    font-size: 1.1rem;
+    position: relative;
+    z-index: 20;
+}
+
+.select-btn:hover,
+.select-btn.active {
+    transform: translateY(-5px) scale(1.02);
+    /* Similar to feature-item hover */
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(108, 99, 255, 0.4);
+}
+
+/* .select-btn i removed - using .orb instead */
+/* .btn-text removed - using .feature-label */
+
+.select-btn .arrow-icon {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-left: 10px;
+    transition: transform 0.3s;
+}
+
+.select-btn.active .arrow-icon {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 10px;
+    background: rgba(10, 10, 20, 0.95);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 15px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    display: none;
+    flex-direction: column;
+    z-index: 100;
+    max-height: 400px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s, transform 0.3s;
+}
+
+.dropdown-menu.show {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.search-input-wrapper {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.search-input-wrapper i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.dropdown-search {
+    width: 100%;
+    padding: 10px 10px 10px 35px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.dropdown-search:focus {
+    border-color: var(--primary);
+}
+
+.options-list {
+    list-style: none;
+    overflow-y: auto;
+    max-height: 200px;
+    margin-top: 5px;
+}
+
+.options-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.options-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.option-item {
+    padding: 10px;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.option-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.option-item.selected {
+    background: rgba(108, 99, 255, 0.2);
+    color: white;
+}
+
+.option-item.selected::after {
+    content: '\f00c';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    color: var(--accent);
+}
+
+.selected-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+    max-height: 80px;
+    overflow-y: auto;
+    z-index: 30;
+    /* Ensure visibility */
+    padding: 0 5px;
+}
+
+/* Position tags below button if desired, or inside dropdown */
+.search-group .selected-tags {
+    position: absolute;
+    top: 60px;
+    /* Below button */
+    left: 0;
+    width: 100%;
+    /* Override defaults for external placement */
+    margin-top: 0;
+    pointer-events: none;
+    /* Let click pass through if needed, but pills need click */
+    pointer-events: auto;
+}
+
+.tag-pill {
+    background: rgba(108, 99, 255, 0.2);
+    border: 1px solid var(--primary);
+    color: white;
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    backdrop-filter: blur(5px);
+}
+
+.tag-pill i {
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.tag-pill i:hover {
+    color: white;
+}
+
+/* Start Button */
+.start-btn-container {
+    margin-top: 6rem;
+    /* Space for tags */
+    height: 60px;
+    /* Preserve space */
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.start-btn {
+    /* Reset specific gradient background to match base button style */
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    /* Match dimensions and padding of feature-item/select-btn */
+    padding: 10px 30px 10px 10px;
+    width: 340px;
+    height: auto;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 60px;
+    cursor: pointer;
+    backdrop-filter: blur(12px);
+    box-shadow: none;
+    /* Initial state same as others */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* keep animation props */
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    letter-spacing: 0.5px;
+
+    /* Flex layout for internal orb if needed, but text centering is fine for now. 
+       Actually, user said 'ui style' look same. Let's make it look exactly like a button. 
+       But it's a 'Start' action. Let's align with the new button style. */
+    display: flex;
+    justify-content: center;
+    /* Center text if no icon */
+    align-items: center;
+}
+
+.start-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.start-btn:hover {
+    transform: translateY(-5px) scale(1.02);
+    /* Match feature-item hover */
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+    /* Cyan glow for Start action */
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0;
+    animation: fadeInDown 1s ease forwards;
+}
+
+.page-subtitle {
+    color: var(--text-muted);
+    margin-bottom: 4rem;
+    font-weight: 300;
+    opacity: 0;
+    animation: fadeInDown 1s ease 0.2s forwards;
+    text-align: center;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Back Navigation --- */
+.back-btn {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 30px;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 100;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+}
+
+.back-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--accent);
+    color: white;
+    transform: translateX(5px);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+}
+
+.back-btn i {
+    transition: transform 0.3s ease;
+}
+
+.back-btn:hover i {
+    transform: translateX(-3px);
+}
+
+/* --- Subscribe Button Floating --- */
+.subscribe-floating-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 900;
+    /* High visibility */
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 40px;
+    /* Brand Theme: Glass Dark + Neon Border */
+    background: rgba(10, 10, 20, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--accent);
+    border-radius: 50px;
+    text-decoration: none;
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.2), inset 0 0 10px rgba(0, 240, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    width: max-content;
+}
+
+.subscribe-floating-btn:hover {
+    transform: translateX(-50%) translateY(-5px);
+    background: rgba(0, 240, 255, 0.1);
+    border-color: #fff;
+    box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), 0 0 10px rgba(108, 99, 255, 0.4);
+    color: var(--accent);
+}
+
+.subscribe-floating-btn i {
+    font-size: 1.25rem;
+    color: var(--accent);
+    filter: drop-shadow(0 0 5px var(--accent));
+}
+
+.subscribe-floating-btn:hover i {
+    color: white;
+    filter: drop-shadow(0 0 8px white);
+}
+
+/* --- Premium Buttons System --- */
+.premium-btn {
+    padding: 14px 40px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.premium-btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, #4a3aff 100%);
+    color: white;
+    box-shadow: 0 4px 15px rgba(108, 99, 255, 0.3);
+}
+
+.premium-btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(108, 99, 255, 0.5), 0 0 15px var(--primary);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.premium-btn-accent {
+    background: linear-gradient(135deg, var(--accent) 0%, #00b8e6 100%);
+    color: #000;
+    box-shadow: 0 4px 15px rgba(0, 240, 255, 0.3);
+}
+
+.premium-btn-accent:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 30px rgba(0, 240, 255, 0.5), 0 0 15px var(--accent);
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+.premium-btn-glass {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.premium-btn-glass:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 240, 255, 0.2);
+}
+
+/* Update specific buttons */
+.login-btn {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.whatsapp-green-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    margin-top: 1rem;
+    color: white;
+}
+
+.whatsapp-green-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(37, 211, 102, 0.6);
+}
+
+.start-btn {
+    width: 340px;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.start-btn.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Addition for multi-button areas */
+.btn-group {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
+/* --- Standard Responsiveness System --- */
+
+/* Medium Devices (Tablets, 1024px and below) */
+@media (max-width: 1024px) {
+    .dashboard-layout {
+        padding: 0 3%;
+        gap: 2rem;
+    }
+
+    .features-right {
+        margin-right: 50px;
+        /* Bring features closer on tablet */
+    }
+
+    .feature-item,
+    .select-btn,
+    .start-btn {
+        width: 300px;
+        /* Slightly smaller for tablet */
+    }
+}
+
+/* Small Devices (768px and below) */
+@media (max-width: 768px) {
+    body {
+        align-items: flex-start;
+        padding-top: 60px;
+    }
+
+    .main-container {
+        height: auto;
+        width: 95%;
+        margin: 2rem 0;
+    }
+
+    .glass-panel {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        border-radius: 20px;
+    }
+
+    .profile-section {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        padding: 3rem 1.5rem;
+    }
+
+    .actions-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .dashboard-layout {
+        flex-direction: column;
+        height: auto;
+        padding: 6rem 1.5rem 4rem;
+        justify-content: flex-start;
+        gap: 3rem;
+    }
+
+    .profile-left {
+        margin-left: 0;
+        margin-bottom: 1rem;
+    }
+
+    .features-right {
+        margin-right: 0;
+        align-items: center;
+        width: 100%;
+    }
+
+    .feature-item,
+    .select-btn,
+    .start-btn {
+        width: 100%;
+        max-width: 400px;
+        margin-left: 0;
+    }
+
+    /* Connect Page */
+    .connect-container {
+        padding: 6rem 1.5rem;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    .search-buttons-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    #connections-layer {
+        display: none;
+        /* Hide SVG lines on vertical layout */
+    }
+
+    .page-title {
+        font-size: var(--fs-h1);
+    }
+
+    .back-btn {
+        top: 15px;
+        left: 15px;
+        padding: 10px 18px;
+        font-size: 0.85rem;
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .subscribe-floating-btn {
+        width: 90%;
+        padding: 12px;
+        font-size: 1rem;
+        bottom: 20px;
+    }
+
+    .chat-support-container {
+        bottom: 85px;
+        /* Stay above floating button */
+        right: 20px;
+    }
+
+    .chat-avatar-wrapper {
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* Extra Small Devices (480px and below) */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .brand-title {
+        font-size: 1.5rem;
+    }
+
+    .feature-item,
+    .select-btn,
+    .start-btn {
+        padding: 8px 15px;
+    }
+
+    .orb {
+        width: 40px;
+        height: 40px;
+    }
+
+    .feature-label {
+        font-size: 0.95rem;
+    }
+
+    .plan-price {
+        font-size: 2.5rem;
+    }
+}
+/* =====================================================
+   REAL ICON BRAND COLORS  (buttons stay white)
+   ===================================================== */
+
+/* --- LinkedIn icon: official blue #0A66C2 --- */
+.fa-linkedin,
+.fa-linkedin-in {
+    color: #0A66C2 !important;
+    -webkit-text-fill-color: #0A66C2 !important;
+}
+
+/* --- WhatsApp icon: official green #25D366 --- */
+.fa-whatsapp {
+    color: #25D366 !important;
+    -webkit-text-fill-color: #25D366 !important;
+}
+
+/* --- Instagram icon: official gradient --- */
+.fa-instagram {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: transparent !important;
+}
+
+/* --- Envelope / mail icon: sky blue --- */
+.fa-envelope,
+.fa-envelope-open-text {
+    color: #38bdf8 !important;
+    -webkit-text-fill-color: #38bdf8 !important;
+}
+
+/* --- Lock icon: amber/gold --- */
+.fa-lock {
+    color: #f59e0b !important;
+    -webkit-text-fill-color: #f59e0b !important;
+}
+
+/* --- User icon: soft purple --- */
+.fa-user,
+.fa-circle-user {
+    color: #a78bfa !important;
+    -webkit-text-fill-color: #a78bfa !important;
+}
+
+/* --- @ / at icon: sky blue (LinkedIn email) --- */
+.fa-at {
+    color: #38bdf8 !important;
+    -webkit-text-fill-color: #38bdf8 !important;
+}
+
+/* --- Fingerprint icon: vivid green (password) --- */
+.fa-fingerprint {
+    color: #00ff88 !important;
+    -webkit-text-fill-color: #00ff88 !important;
+}
+
+/* --- Comments / chat icon: green --- */
+.fa-comments {
+    color: #34d399 !important;
+    -webkit-text-fill-color: #34d399 !important;
+}
+
+/* --- Heart / reactions icon: red-pink --- */
+.fa-heart {
+    color: #f43f5e !important;
+    -webkit-text-fill-color: #f43f5e !important;
+}
+
+/* --- Crosshairs (Search Best Leads) --- */
+.fa-crosshairs {
+    color: #00F0FF !important;
+    -webkit-text-fill-color: #00F0FF !important;
+}
+
+/* --- User-Plus (Connection Requests) --- */
+.fa-user-plus {
+    color: #0A66C2 !important;
+    -webkit-text-fill-color: #0A66C2 !important;
+}
+
+/* --- Paper-Plane (Follow Up) --- */
+.fa-paper-plane {
+    color: #34d399 !important;
+    -webkit-text-fill-color: #34d399 !important;
+}
+
+/* --- Message (Comment on Posts) --- */
+.fa-message {
+    color: #f43f5e !important;
+    -webkit-text-fill-color: #f43f5e !important;
+}
+
+/* --- Edit / Wand-Magic-Sparkles (Automate Posting): orange --- */
+.fa-edit,
+.fa-pen,
+.fa-pencil,
+.fa-wand-magic-sparkles {
+    color: #fb923c !important;
+    -webkit-text-fill-color: #fb923c !important;
+}
+
+/* --- Crown / Rocket icon (Subscribe btn): gold --- */
+.fa-crown,
+.fa-rocket {
+    color: #facc15 !important;
+    -webkit-text-fill-color: #facc15 !important;
+}
+
+/* --- Calendar icon: cyan --- */
+.fa-calendar-check {
+    color: #00F0FF !important;
+    -webkit-text-fill-color: #00F0FF !important;
+}
+
+/* --- Shield icon: green --- */
+.fa-shield-check,
+.fa-shield-alt {
+    color: #00ff88 !important;
+    -webkit-text-fill-color: #00ff88 !important;
+}
+
+/* --- Mobile android icon: green --- */
+.fa-mobile-android {
+    color: #00ff88 !important;
+    -webkit-text-fill-color: #00ff88 !important;
+}
+
+/* --- Info circle: muted blue --- */
+.fa-info-circle {
+    color: #60a5fa !important;
+    -webkit-text-fill-color: #60a5fa !important;
+}
+
+/* --- Eye icon: muted --- */
+.fa-eye,
+.fa-eye-slash {
+    color: #a0a0b0 !important;
+    -webkit-text-fill-color: #a0a0b0 !important;
+}
+
+/* --- Sign out: red --- */
+.fa-sign-out-alt {
+    color: #ff4d4d !important;
+    -webkit-text-fill-color: #ff4d4d !important;
+}
+
+/* --- Check / success icons: green --- */
+.fa-check-circle {
+    color: #28a745 !important;
+    -webkit-text-fill-color: #28a745 !important;
+}
+
+/* --- Spinner: neutral white --- */
+.fa-spinner {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+}
+
+/* =====================================================
+   BUTTONS — keep white as per user request
+   ===================================================== */
+.login-btn,
+.premium-btn-primary,
+button[type='submit'].login-btn {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    text-shadow: none !important;
+}
+
+.login-btn:hover,
+.premium-btn-primary:hover {
+    background: rgba(255, 255, 255, 0.9) !important;
+    color: #000000 !important;
+}
+
+/* Keep icon color inside white buttons black so it's visible */
+.login-btn i,
+.premium-btn-primary i {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+/* --- Founder section fc-icon: restore per-card brand colors --- */
+.founder-card.fc-linkedin .fc-icon {
+    color: #0A66C2 !important;
+    -webkit-text-fill-color: #0A66C2 !important;
+    background: none !important;
+}
+
+.founder-card.fc-instagram .fc-icon {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+.founder-card.fc-calendar .fc-icon {
+    color: #00F0FF !important;
+    -webkit-text-fill-color: #00F0FF !important;
+    background: none !important;
+}
+
+/* --- Orb icons on dashboard feature buttons --- */
+/* Search Best Leads (crosshairs): cyan */
+#btn-2 .orb { color: #00F0FF !important; }
+/* Connection Requests (user-plus): LinkedIn blue */
+#btn-1 .orb { color: #0A66C2 !important; }
+/* Follow Up Messages (paper-plane): green */
+#btn-3 .orb { color: #34d399 !important; }
+/* Comment on Posts (message): pink-red */
+#btn-5 .orb { color: #f43f5e !important; }
+/* Automate Posting (wand-magic-sparkles): orange */
+#btn-4 .orb { color: #fb923c !important; }
+
+/* Orb background stays glass, not white */
+.feature-item .orb {
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.12), rgba(0,0,0,0.5)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
